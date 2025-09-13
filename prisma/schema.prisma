@@ -1,0 +1,80 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(uuid())
+  role          Role     @default(CUSTOMER)
+  name          String
+  email         String
+  password_hash String
+  birth_date    DateTime
+  sex           String
+  phone         String?
+  created_at    DateTime @default(now())
+
+  haircuts          Haircut[]        @relation("CustomerHaircuts")
+  checkIns          CheckIn[]
+  userLinksBarber   BarberCustomer[] @relation("UserAsEmployee")
+  userLinksCustomer BarberCustomer[] @relation("UserAsCustomer")
+
+  @@map("users")
+}
+
+model BarberCustomer {
+  id               String @id @default(uuid())
+  user_barber_id   String
+  user_customer_id String
+
+  barber   User @relation("UserAsEmployee", fields: [user_barber_id], references: [id])
+  customer User @relation("UserAsCustomer", fields: [user_customer_id], references: [id])
+
+  @@map("barber_customers")
+}
+
+model BarberShop {
+  id        String    @id @default(uuid())
+  title     String
+  phone     String?
+  latitude  Decimal
+  longitude Decimal
+  checkIns  CheckIn[]
+
+  @@map("barber_shops")
+}
+
+model Haircut {
+  id          String  @id @default(uuid())
+  name        String
+  description String
+  price       Decimal @db.Decimal(10, 2)
+
+  customer User[] @relation("CustomerHaircuts")
+
+  @@map("haircuts")
+}
+
+model CheckIn {
+  id             String    @id @default(uuid())
+  created_at     DateTime  @default(now())
+  validate_at    DateTime?
+  barber_shop_id String
+  user_id        String
+
+  user       User       @relation(fields: [user_id], references: [id])
+  barbershop BarberShop @relation(fields: [barber_shop_id], references: [id])
+
+  @@map("check_ins")
+}
+
+enum Role {
+  ADMIN
+  EMPLOYEE
+  CUSTOMER
+}
