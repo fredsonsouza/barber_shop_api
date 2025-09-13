@@ -2,22 +2,22 @@ import { HaircutsRepository } from '@/repositories/haircuts-repository'
 import { Haircut } from 'generated/prisma'
 import { HaircutAlreadyExistsError } from './error/haircut-already-exists-error'
 
-export interface HaircutUseCaseRequest {
+export interface CreateHaircutUseCaseRequest {
   name: string
   description: string
   price: number
 }
-export interface HaircutUseCaseResponse {
+export interface CreateHaircutUseCaseResponse {
   haircut: Haircut
 }
-export class HaircutUseCase {
+export class CreateHaircutUseCase {
   constructor(private haircutsRepository: HaircutsRepository) {}
 
   async execute({
     name,
     description,
     price,
-  }: HaircutUseCaseRequest): Promise<HaircutUseCaseResponse> {
+  }: CreateHaircutUseCaseRequest): Promise<CreateHaircutUseCaseResponse> {
     const haircutWithSameName = await this.haircutsRepository.findByName(name)
 
     if (haircutWithSameName) {
