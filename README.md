@@ -33,6 +33,7 @@ API de uma aplicação para uma barber shop desenvolvida em Node.js com TypeScri
 - [] Deve ser possível o usuário realizar check-in em uma barbearia;
 - [] Deve ser possível validar o check-in de um usuário;
 - [] Deve ser possível cadastrar uma barbearia;
+- [] Deve ser possível cadastrar um corte de cabelo;
 
 ## RNs (Regras de negócio)
 
