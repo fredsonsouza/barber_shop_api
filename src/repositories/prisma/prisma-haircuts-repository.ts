@@ -1,8 +1,15 @@
 import { Haircut, Prisma } from 'generated/prisma'
-import { HaircutsRepository } from '../haircuts-repository'
+import { HaircutsRepository, UpdateHaircutParams } from '../haircuts-repository'
 import { prisma } from '@/lib/prisma'
 
 export class PrismaHaircutsRepository implements HaircutsRepository {
+  findById(id: string): Promise<Haircut | null> {
+    throw new Error('Method not implemented.')
+  }
+  update(id: string, params: UpdateHaircutParams): Promise<Haircut | null> {
+    throw new Error('Method not implemented.')
+  }
+
   async findByName(name: string) {
     const haircut = await prisma.haircut.findFirst({
       where: {

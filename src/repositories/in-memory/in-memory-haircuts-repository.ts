@@ -1,17 +1,38 @@
 import { Haircut, Prisma } from 'generated/prisma'
-import { HaircutsRepository } from '../haircuts-repository'
+import { HaircutsRepository, UpdateHaircutParams } from '../haircuts-repository'
 import { randomUUID } from 'node:crypto'
+import { Decimal } from 'generated/prisma/runtime/library'
 
 export class InMemoryHaircutsRepository implements HaircutsRepository {
   public items: Haircut[] = []
+
+  async findById(id: string) {
+    const haircut = this.items.find((haircut) => haircut.id === id)
+
+    return haircut ?? null
+  }
+
   async findByName(name: string) {
     const haircut = this.items.find((haircut) => haircut.name === name)
 
-    if (!haircut) {
-      return null
-    }
+    return haircut ?? null
+  }
+
+  async update(id: string, params: UpdateHaircutParams) {
+    const haircutIndex = this.items.findIndex((item) => item.id === id)
+
+    if (haircutIndex === -1) return null
+
+    const haircut = this.items[haircutIndex]!
+
+    if (params.name !== undefined) haircut.name = params.name
+    if (params.description !== undefined)
+      haircut.description = params.description
+    if (params.price !== undefined) haircut.price = new Decimal(params.price)
+
     return haircut
   }
+
   async create(data: Prisma.HaircutCreateInput) {
     const haircut = {
       id: randomUUID(),
