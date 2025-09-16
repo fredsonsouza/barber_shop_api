@@ -23,7 +23,6 @@ describe('Update Haircut Use Case', () => {
       id: haircut.id,
       name: 'Social cut',
     })
-
     expect(updatedHaircut.id).toEqual(haircut.id)
     expect(haircut.name).toEqual('Social cut')
   })

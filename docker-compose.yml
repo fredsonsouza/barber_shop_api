@@ -1,5 +1,5 @@
 services:
-  find-a-friend-pg:
+  barber-shop-pg:
     image: bitnami/postgresql
     ports:
       - 5432:5432

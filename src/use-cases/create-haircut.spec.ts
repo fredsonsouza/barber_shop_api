@@ -17,7 +17,6 @@ describe('Create Haircut', () => {
       description: 'An elegant cut',
       price: 20,
     })
-    console.log(haircut.id)
     expect(haircut.id).toEqual(expect.any(String))
   })
   it('Should not be able to create a haircut with the same name', async () => {
