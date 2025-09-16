@@ -1,6 +1,6 @@
 import { InMemoryBarberShopsRepository } from '@/repositories/in-memory/in-memory-barber-shops-repository'
 import { beforeEach, describe, expect, it } from 'vitest'
-import { CreateBarberShopUseCase } from './create-barber-shop-use-case'
+import { CreateBarberShopUseCase } from './create-barber-shop'
 
 let barberShopsRepository: InMemoryBarberShopsRepository
 let sut: CreateBarberShopUseCase

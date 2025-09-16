@@ -63,7 +63,7 @@ model Haircut {
 model CheckIn {
   id             String    @id @default(uuid())
   created_at     DateTime  @default(now())
-  validate_at    DateTime?
+  validated_at   DateTime?
   barber_shop_id String
   user_id        String
 
