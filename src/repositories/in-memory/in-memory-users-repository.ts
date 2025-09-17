@@ -1,9 +1,10 @@
-import { User, Prisma } from 'generated/prisma'
+import { User, Prisma, Haircut } from 'generated/prisma'
 import { UsersRepository } from '../users-repository'
 import { randomUUID } from 'node:crypto'
 
 export class InMemoryUsersRepository implements UsersRepository {
   public items: User[] = []
+  public userFavorites: Record<string, string[]> = {}
 
   async findByEmail(email: string) {
     const user = this.items.find((user) => user.email === email)
@@ -19,6 +20,21 @@ export class InMemoryUsersRepository implements UsersRepository {
       return null
     }
     return user
+  }
+
+  async toggleFavoriteHaircut(userId: string, haircutId: string) {
+    if (!this.userFavorites[userId]) {
+      this.userFavorites[userId] = []
+    }
+    const favorites = this.userFavorites[userId]
+
+    if (favorites.includes(haircutId)) {
+      this.userFavorites[userId] = favorites.filter((id) => id !== haircutId)
+      return false
+    } else {
+      favorites.push(haircutId)
+      return true
+    }
   }
 
   async create(data: Prisma.UserCreateInput) {
