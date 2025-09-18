@@ -5,8 +5,10 @@ import { CheckInUseCase } from './check-in'
 import { MaxNumberCheckInsError } from './error/max-number-of-check-ins-error'
 import { Decimal } from 'generated/prisma/runtime/library'
 import { MaxDistanceError } from './error/max-distance-error'
+import { InMemoryHaircutsRepository } from '@/repositories/in-memory/in-memory-haircuts-repository'
 
 let checkInsRepository: InMemoryCheckInsRepository
+let haircutsRepository: InMemoryHaircutsRepository
 let barberShopsRepository: InMemoryBarberShopsRepository
 let sut: CheckInUseCase
 
@@ -14,14 +16,25 @@ describe('Check-in Use Case', () => {
   beforeEach(async () => {
     checkInsRepository = new InMemoryCheckInsRepository()
     barberShopsRepository = new InMemoryBarberShopsRepository()
-    sut = new CheckInUseCase(checkInsRepository, barberShopsRepository)
-
+    haircutsRepository = new InMemoryHaircutsRepository()
+    sut = new CheckInUseCase(
+      checkInsRepository,
+      barberShopsRepository,
+      haircutsRepository,
+    )
     await barberShopsRepository.create({
       id: 'barber-shop-01',
       title: 'JavaScript Barber Shop',
       phone: '000000',
       latitude: -27.2092052,
       longitude: -49.6401091,
+    })
+
+    await haircutsRepository.create({
+      id: 'haircut-01',
+      name: 'Social cut',
+      description: 'An ellegant cut',
+      price: 20,
     })
     vi.useFakeTimers()
   })
@@ -32,6 +45,9 @@ describe('Check-in Use Case', () => {
   it('Should be able to check in', async () => {
     const { checkIn } = await sut.execute({
       userId: 'user-01',
+      barberId: 'barber-01',
+      haircutId: 'haircut-01',
+      price: 20,
       barberShopId: 'barber-shop-01',
       userLatitude: -27.2092052,
       userLongitude: -49.6401091,
@@ -44,6 +60,9 @@ describe('Check-in Use Case', () => {
 
     await sut.execute({
       userId: 'user-01',
+      barberId: 'barber-01',
+      haircutId: 'haircut-01',
+      price: 20,
       barberShopId: 'barber-shop-01',
       userLatitude: -27.2092052,
       userLongitude: -49.6401091,
@@ -52,6 +71,9 @@ describe('Check-in Use Case', () => {
     await expect(() =>
       sut.execute({
         userId: 'user-01',
+        barberId: 'barber-01',
+        haircutId: 'haircut-01',
+        price: 20,
         barberShopId: 'barber-shop-01',
         userLatitude: -27.2092052,
         userLongitude: -49.6401091,
@@ -64,6 +86,9 @@ describe('Check-in Use Case', () => {
 
     await sut.execute({
       userId: 'user-01',
+      barberId: 'barber-01',
+      haircutId: 'haircut-01',
+      price: 20,
       barberShopId: 'barber-shop-01',
       userLatitude: -27.2092052,
       userLongitude: -49.6401091,
@@ -73,6 +98,9 @@ describe('Check-in Use Case', () => {
 
     const { checkIn } = await sut.execute({
       userId: 'user-01',
+      barberId: 'barber-01',
+      haircutId: 'haircut-01',
+      price: 20,
       barberShopId: 'barber-shop-01',
       userLatitude: -27.2092052,
       userLongitude: -49.6401091,
@@ -91,8 +119,11 @@ describe('Check-in Use Case', () => {
 
     await expect(() =>
       sut.execute({
-        barberShopId: 'barber-shop-02',
         userId: 'user-01',
+        barberId: 'barber-01',
+        haircutId: 'haircut-01',
+        price: 20,
+        barberShopId: 'barber-shop-02',
         userLatitude: -27.2092052,
         userLongitude: -49.6401091,
       }),

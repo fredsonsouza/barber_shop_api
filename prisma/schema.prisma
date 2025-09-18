@@ -20,7 +20,8 @@ model User {
   created_at    DateTime @default(now())
 
   haircuts          Haircut[]        @relation("CustomerHaircuts")
-  checkIns          CheckIn[]
+  customerCheckIns  CheckIn[]        @relation("CustomerCheckIns")
+  barberCheckIns    CheckIn[]        @relation("BarberCheckIns")
   userLinksBarber   BarberCustomer[] @relation("UserAsEmployee")
   userLinksCustomer BarberCustomer[] @relation("UserAsCustomer")
 
@@ -50,12 +51,15 @@ model BarberShop {
 }
 
 model Haircut {
-  id          String  @id @default(uuid())
+  id          String    @id @default(uuid())
   name        String
   description String
-  price       Decimal @db.Decimal(10, 2)
+  price       Decimal   @db.Decimal(10, 2)
+  created_at  DateTime  @default(now())
+  updated_at  DateTime?
 
-  customer User[] @relation("CustomerHaircuts")
+  customer User[]    @relation("CustomerHaircuts")
+  checkIns CheckIn[]
 
   @@map("haircuts")
 }
@@ -66,9 +70,14 @@ model CheckIn {
   validated_at   DateTime?
   barber_shop_id String
   user_id        String
+  barber_id      String
+  haircut_id     String
+  price          Decimal   @db.Decimal(10, 2)
 
-  user       User       @relation(fields: [user_id], references: [id])
+  user       User       @relation("CustomerCheckIns", fields: [user_id], references: [id])
+  barber     User       @relation("BarberCheckIns", fields: [barber_id], references: [id])
   barbershop BarberShop @relation(fields: [barber_shop_id], references: [id])
+  haircut    Haircut    @relation(fields: [haircut_id], references: [id])
 
   @@map("check_ins")
 }

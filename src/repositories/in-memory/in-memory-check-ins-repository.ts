@@ -29,6 +29,9 @@ export class InMemoryCheckInsRepository implements CheckInsRepository {
     const checkIn = {
       id: randomUUID(),
       user_id: data.user_id,
+      barber_id: data.barber_id,
+      haircut_id: data.haircut_id,
+      price: new Prisma.Decimal(data.price.toString()),
       barber_shop_id: data.barber_shop_id,
       validated_at: data.validated_at ? new Date(data.validated_at) : null,
       created_at: new Date(),

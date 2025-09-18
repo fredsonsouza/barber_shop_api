@@ -5,9 +5,13 @@ import { ResourceNotFoundError } from './error/resource-not-found-error'
 import { getDistanceBetweenCoordinates } from '@/utils/get-distance-between-coordinates'
 import { MaxDistanceError } from './error/max-distance-error'
 import { MaxNumberCheckInsError } from './error/max-number-of-check-ins-error'
+import { HaircutsRepository } from '@/repositories/haircuts-repository'
 
 export interface CheckInUseCaseRequest {
   userId: string
+  barberId: string
+  haircutId: string
+  price: number
   barberShopId: string
   userLatitude: number
   userLongitude: number
@@ -20,10 +24,14 @@ export class CheckInUseCase {
   constructor(
     private checkInsRepository: CheckInsRepository,
     private barberShopsRepository: BarberShopsRepository,
+    private haircutsRepository: HaircutsRepository,
   ) {}
 
   async execute({
     userId,
+    barberId,
+    haircutId,
+    price,
     barberShopId,
     userLatitude,
     userLongitude,
@@ -31,6 +39,11 @@ export class CheckInUseCase {
     const barberShop = await this.barberShopsRepository.findById(barberShopId)
 
     if (!barberShop) {
+      throw new ResourceNotFoundError()
+    }
+    const haircut = await this.haircutsRepository.findById(haircutId)
+
+    if (!haircut) {
       throw new ResourceNotFoundError()
     }
     const distance = getDistanceBetweenCoordinates(
@@ -58,6 +71,9 @@ export class CheckInUseCase {
 
     const checkIn = await this.checkInsRepository.create({
       user_id: userId,
+      barber_id: barberId,
+      haircut_id: haircutId,
+      price: haircut.price,
       barber_shop_id: barberShopId,
     })
 

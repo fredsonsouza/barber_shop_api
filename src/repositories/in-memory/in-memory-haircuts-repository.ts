@@ -35,10 +35,12 @@ export class InMemoryHaircutsRepository implements HaircutsRepository {
 
   async create(data: Prisma.HaircutCreateInput) {
     const haircut = {
-      id: randomUUID(),
+      id: data.id ?? randomUUID(),
       name: data.name,
       description: data.description,
       price: new Prisma.Decimal(data.price.toString()),
+      created_at: new Date(),
+      updated_at: data.updated_at ? new Date(data.updated_at) : null,
     }
     this.items.push(haircut)
 
