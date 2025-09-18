@@ -38,11 +38,12 @@ API de uma aplicação para uma barber shop desenvolvida em Node.js com TypeScri
 ## RNs (Regras de negócio)
 
 - [x] O usuário não deve poder se cadastrar com um e-mail duplicado;
-- [] O usuário não pode fazer 2 check-ins no mesmo dia;
-- [] O usuário não pode fazer check-in se não estiver perto (03m) da barbearia;
-- [] O check-in só pode ser validado até 24 horas após ser criado;
+- [x] O usuário pode favoritar um ou mais cortes de cabelo;
+- [x] O usuário não pode fazer 2 check-ins no mesmo dia;
+- [x] O usuário não pode fazer check-in se não estiver perto (100m) da barbearia;
+- [x] O check-in só pode ser validado até 24 horas após ser criado;
 - [] O check-in só pode ser validado por administradores;
-- [] A academia só pode ser cadastrada por administradores;
+- [] A barbearia só pode ser cadastrada por administradores;
 
 ## RNFs (Requisitos não-funcionais)
 

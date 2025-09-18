@@ -75,6 +75,6 @@ model CheckIn {
 
 enum Role {
   ADMIN
-  EMPLOYEE
+  BARBER
   CUSTOMER
 }

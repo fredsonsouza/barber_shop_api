@@ -1,6 +1,6 @@
 import { InMemoryHaircutsRepository } from '@/repositories/in-memory/in-memory-haircuts-repository'
 import { beforeEach, describe, expect, it } from 'vitest'
-import { UpdateHaircutUseCase } from './update-haircut-use-case'
+import { UpdateHaircutUseCase } from './update-haircut'
 import { ResourceNotFoundError } from './error/resource-not-found-error'
 
 let haircutsRepository: InMemoryHaircutsRepository
