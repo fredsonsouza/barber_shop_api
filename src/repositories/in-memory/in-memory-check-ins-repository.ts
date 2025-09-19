@@ -8,6 +8,10 @@ export class InMemoryCheckInsRepository implements CheckInsRepository {
   public users: User[] = []
   public haircuts: Haircut[] = []
 
+  async findById(id: string) {
+    return this.items.find((checkIn) => checkIn.id === id) ?? null
+  }
+
   async totalSpentByUserCustomerId(userCustomerId: string) {
     const user = this.users.find((user) => user.id === userCustomerId)
 
@@ -138,6 +142,16 @@ export class InMemoryCheckInsRepository implements CheckInsRepository {
     }
 
     this.items.push(checkIn)
+
+    return checkIn
+  }
+
+  async save(checkIn: CheckIn) {
+    const checkInIndex = this.items.findIndex((item) => item.id === checkIn.id)
+
+    if (checkInIndex >= 0) {
+      this.items[checkInIndex] = checkIn
+    }
 
     return checkIn
   }
