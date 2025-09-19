@@ -122,7 +122,6 @@ describe('Link Customer to Barber Use Case', () => {
 
     const links = await barberCustomersRepository.findBarberById(barber.id)
 
-    console.log(links)
     expect(links).toHaveLength(2)
     expect(links).toEqual(
       expect.arrayContaining([
