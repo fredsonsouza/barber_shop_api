@@ -2,10 +2,12 @@ import fastify from 'fastify'
 import { haircutsRoutes } from './http/controllers/haircuts/routes'
 import z, { ZodError } from 'zod'
 import { env } from './env'
+import { barberShopsRoutes } from './http/controllers/barber-shops/routes'
 
 export const app = fastify()
 
 app.register(haircutsRoutes)
+app.register(barberShopsRoutes)
 
 app.setErrorHandler((error, _, reply) => {
   if (error instanceof ZodError) {
