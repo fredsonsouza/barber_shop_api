@@ -5,6 +5,7 @@ import { env } from './env'
 import { barberShopsRoutes } from './http/controllers/barber-shops/routes'
 import { userRoutes } from './http/controllers/user/routes'
 import { barberCustomersRoutes } from './http/controllers/baber-customers/routes'
+import { checkInsRoutes } from './http/controllers/check-ins/routes'
 
 export const app = fastify()
 
@@ -12,6 +13,7 @@ app.register(haircutsRoutes)
 app.register(barberShopsRoutes)
 app.register(userRoutes)
 app.register(barberCustomersRoutes)
+app.register(checkInsRoutes)
 
 app.setErrorHandler((error, _, reply) => {
   if (error instanceof ZodError) {

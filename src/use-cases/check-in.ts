@@ -11,7 +11,6 @@ export interface CheckInUseCaseRequest {
   userId: string
   barberId: string
   haircutId: string
-  price: number
   barberShopId: string
   userLatitude: number
   userLongitude: number
@@ -31,7 +30,6 @@ export class CheckInUseCase {
     userId,
     barberId,
     haircutId,
-    price,
     barberShopId,
     userLatitude,
     userLongitude,
