@@ -3,8 +3,13 @@ import { HaircutsRepository, UpdateHaircutParams } from '../haircuts-repository'
 import { prisma } from '@/lib/prisma'
 
 export class PrismaHaircutsRepository implements HaircutsRepository {
-  findById(id: string): Promise<Haircut | null> {
-    throw new Error('Method not implemented.')
+  async findById(id: string) {
+    const haircutId = await prisma.haircut.findUnique({
+      where: {
+        id,
+      },
+    })
+    return haircutId
   }
   update(id: string, params: UpdateHaircutParams): Promise<Haircut | null> {
     throw new Error('Method not implemented.')

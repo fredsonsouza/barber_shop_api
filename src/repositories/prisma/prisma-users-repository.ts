@@ -19,8 +19,28 @@ export class PrismaUsersRepository implements UsersRepository {
     })
     return userId
   }
-  toggleFavoriteHaircut(userId: string, haircutId: string): Promise<boolean> {
-    throw new Error('Method not implemented.')
+  async toggleFavoriteHaircut(userId: string, haircutId: string) {
+    const existing = await prisma.userFavoriteHaircut.findUnique({
+      where: {
+        user_id_haircut_id: { user_id: userId, haircut_id: haircutId },
+      },
+    })
+    if (existing) {
+      await prisma.userFavoriteHaircut.delete({
+        where: {
+          user_id_haircut_id: { user_id: userId, haircut_id: haircutId },
+        },
+      })
+      return false
+    } else {
+      await prisma.userFavoriteHaircut.create({
+        data: {
+          user_id: userId,
+          haircut_id: haircutId,
+        },
+      })
+      return true
+    }
   }
   async create(data: Prisma.UserCreateInput) {
     const user = await prisma.user.create({
