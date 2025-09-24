@@ -11,7 +11,7 @@ function generateDatabaseUrl(schema: string) {
 
   const url = new URL(process.env.DATABASE_URL)
 
-  url.searchParams.set('sechema', schema)
+  url.searchParams.set('schema', schema)
 
   return url.toString()
 }

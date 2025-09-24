@@ -1,10 +1,10 @@
 -- CreateEnum
-CREATE TYPE "public"."Role" AS ENUM ('ADMIN', 'EMPLOYEE', 'CUSTOMER');
+CREATE TYPE "Role" AS ENUM ('ADMIN', 'EMPLOYEE', 'CUSTOMER');
 
 -- CreateTable
-CREATE TABLE "public"."users" (
+CREATE TABLE "users" (
     "id" TEXT NOT NULL,
-    "role" "public"."Role" NOT NULL DEFAULT 'CUSTOMER',
+    "role" "Role" NOT NULL DEFAULT 'CUSTOMER',
     "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "password_hash" TEXT NOT NULL,
@@ -17,7 +17,7 @@ CREATE TABLE "public"."users" (
 );
 
 -- CreateTable
-CREATE TABLE "public"."barber_customers" (
+CREATE TABLE "barber_customers" (
     "id" TEXT NOT NULL,
     "user_barber_id" TEXT NOT NULL,
     "user_customer_id" TEXT NOT NULL,
@@ -26,7 +26,7 @@ CREATE TABLE "public"."barber_customers" (
 );
 
 -- CreateTable
-CREATE TABLE "public"."barber_shops" (
+CREATE TABLE "barber_shops" (
     "id" TEXT NOT NULL,
     "title" TEXT NOT NULL,
     "phone" TEXT,
@@ -37,7 +37,7 @@ CREATE TABLE "public"."barber_shops" (
 );
 
 -- CreateTable
-CREATE TABLE "public"."haircuts" (
+CREATE TABLE "haircuts" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT NOT NULL,
@@ -47,7 +47,7 @@ CREATE TABLE "public"."haircuts" (
 );
 
 -- CreateTable
-CREATE TABLE "public"."check_ins" (
+CREATE TABLE "check_ins" (
     "id" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "validate_at" TIMESTAMP(3),
@@ -58,7 +58,7 @@ CREATE TABLE "public"."check_ins" (
 );
 
 -- CreateTable
-CREATE TABLE "public"."_CustomerHaircuts" (
+CREATE TABLE "_CustomerHaircuts" (
     "A" TEXT NOT NULL,
     "B" TEXT NOT NULL,
 
@@ -66,22 +66,22 @@ CREATE TABLE "public"."_CustomerHaircuts" (
 );
 
 -- CreateIndex
-CREATE INDEX "_CustomerHaircuts_B_index" ON "public"."_CustomerHaircuts"("B");
+CREATE INDEX "_CustomerHaircuts_B_index" ON "_CustomerHaircuts"("B");
 
 -- AddForeignKey
-ALTER TABLE "public"."barber_customers" ADD CONSTRAINT "barber_customers_user_barber_id_fkey" FOREIGN KEY ("user_barber_id") REFERENCES "public"."users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "barber_customers" ADD CONSTRAINT "barber_customers_user_barber_id_fkey" FOREIGN KEY ("user_barber_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "public"."barber_customers" ADD CONSTRAINT "barber_customers_user_customer_id_fkey" FOREIGN KEY ("user_customer_id") REFERENCES "public"."users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "barber_customers" ADD CONSTRAINT "barber_customers_user_customer_id_fkey" FOREIGN KEY ("user_customer_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "public"."check_ins" ADD CONSTRAINT "check_ins_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "check_ins" ADD CONSTRAINT "check_ins_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "public"."check_ins" ADD CONSTRAINT "check_ins_barber_shop_id_fkey" FOREIGN KEY ("barber_shop_id") REFERENCES "public"."barber_shops"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "check_ins" ADD CONSTRAINT "check_ins_barber_shop_id_fkey" FOREIGN KEY ("barber_shop_id") REFERENCES "barber_shops"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "public"."_CustomerHaircuts" ADD CONSTRAINT "_CustomerHaircuts_A_fkey" FOREIGN KEY ("A") REFERENCES "public"."haircuts"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "_CustomerHaircuts" ADD CONSTRAINT "_CustomerHaircuts_A_fkey" FOREIGN KEY ("A") REFERENCES "haircuts"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "public"."_CustomerHaircuts" ADD CONSTRAINT "_CustomerHaircuts_B_fkey" FOREIGN KEY ("B") REFERENCES "public"."users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "_CustomerHaircuts" ADD CONSTRAINT "_CustomerHaircuts_B_fkey" FOREIGN KEY ("B") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
