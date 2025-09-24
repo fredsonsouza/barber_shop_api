@@ -12,7 +12,7 @@ describe('Create Haircut (e2e)', async () => {
 
   it('Should be able to create a haircut', async () => {
     const response = await request(app.server).post('/haircuts').send({
-      name: 'Test haircutaa',
+      name: 'Test haircut',
       description: 'Description test haircut',
       price: 20,
     })
