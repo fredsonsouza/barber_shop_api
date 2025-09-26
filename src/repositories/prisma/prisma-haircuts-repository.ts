@@ -11,8 +11,20 @@ export class PrismaHaircutsRepository implements HaircutsRepository {
     })
     return haircutId
   }
-  update(id: string, params: UpdateHaircutParams): Promise<Haircut | null> {
-    throw new Error('Method not implemented.')
+  async update(id: string, params: UpdateHaircutParams) {
+    const haircut = await prisma.haircut.update({
+      where: {
+        id,
+      },
+      data: {
+        ...(params.name !== undefined && { name: params.name }),
+        ...(params.description !== undefined && {
+          description: params.description,
+        }),
+        ...(params.price !== undefined && { price: params.price }),
+      },
+    })
+    return haircut
   }
 
   async findByName(name: string) {
