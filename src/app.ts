@@ -6,8 +6,13 @@ import { barberShopsRoutes } from './http/controllers/barber-shops/routes'
 import { userRoutes } from './http/controllers/user/routes'
 import { barberCustomersRoutes } from './http/controllers/baber-customers/routes'
 import { checkInsRoutes } from './http/controllers/check-ins/routes'
+import fastifyJwt from '@fastify/jwt'
 
 export const app = fastify()
+
+app.register(fastifyJwt, {
+  secret: env.JWT_SECRET,
+})
 
 app.register(haircutsRoutes)
 app.register(barberShopsRoutes)
