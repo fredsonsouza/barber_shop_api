@@ -3,10 +3,10 @@ import { haircutsRoutes } from './http/controllers/haircuts/routes'
 import z, { ZodError } from 'zod'
 import { env } from './env'
 import { barberShopsRoutes } from './http/controllers/barber-shops/routes'
-import { userRoutes } from './http/controllers/user/routes'
 import { barberCustomersRoutes } from './http/controllers/baber-customers/routes'
 import { checkInsRoutes } from './http/controllers/check-ins/routes'
 import fastifyJwt from '@fastify/jwt'
+import { userRoutes } from './http/controllers/users/routes'
 
 export const app = fastify()
 
