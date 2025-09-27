@@ -16,7 +16,7 @@ ALTER TABLE "haircuts" ADD COLUMN     "created_at" TIMESTAMP(3) NOT NULL DEFAULT
 ADD COLUMN     "updated_at" TIMESTAMP(3);
 
 -- AddForeignKey
-ALTER TABLE "check_ins" ADD CONSTRAINT "check_ins_barber_id_fkey" FOREIGN KEY ("barber_id") REFERENCES "public"."users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "check_ins" ADD CONSTRAINT "check_ins_barber_id_fkey" FOREIGN KEY ("barber_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "check_ins" ADD CONSTRAINT "check_ins_haircut_id_fkey" FOREIGN KEY ("haircut_id") REFERENCES "public"."haircuts"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "check_ins" ADD CONSTRAINT "check_ins_haircut_id_fkey" FOREIGN KEY ("haircut_id") REFERENCES "haircuts"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
