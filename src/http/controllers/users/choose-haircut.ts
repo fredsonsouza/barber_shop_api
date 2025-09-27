@@ -4,21 +4,20 @@ import z from 'zod'
 
 export async function choose(request: FastifyRequest, reply: FastifyReply) {
   const createUserParamsSchema = z.object({
-    userId: z.uuid(),
     haircutId: z.uuid(),
   })
 
-  const { userId, haircutId } = createUserParamsSchema.parse(request.params)
+  const { haircutId } = createUserParamsSchema.parse(request.params)
 
   const chooseFavoriteHaircutUseCase = makeChooseFavoriteHaircutUseCase()
 
   const { user, haircut, favorited } =
     await chooseFavoriteHaircutUseCase.execute({
-      userId,
+      userId: request.user.sub,
       haircutId,
     })
   return reply.status(200).send({
-    userId: user.id,
+    userId: request.user.sub,
     haircutId: haircut.id,
     favorited,
   })

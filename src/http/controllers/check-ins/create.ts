@@ -4,7 +4,6 @@ import z from 'zod'
 
 export async function create(request: FastifyRequest, reply: FastifyReply) {
   const createCheckInParamsSchema = z.object({
-    userId: z.uuid(),
     barberId: z.uuid(),
     barberShopId: z.uuid(),
     haircutId: z.uuid(),
@@ -18,8 +17,9 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
       return Math.abs(value) <= 100
     }),
   })
-  const { barberShopId, userId, barberId, haircutId } =
-    createCheckInParamsSchema.parse(request.params)
+  const { barberShopId, barberId, haircutId } = createCheckInParamsSchema.parse(
+    request.params,
+  )
 
   const { latitude, longitude } = createCheckInBodySchema.parse(request.body)
   try {
@@ -28,7 +28,7 @@ export async function create(request: FastifyRequest, reply: FastifyReply) {
     const { checkIn } = await checkInUseCase.execute({
       barberShopId,
       barberId,
-      userId,
+      userId: request.user.sub,
       haircutId,
       userLatitude: latitude,
       userLongitude: longitude,

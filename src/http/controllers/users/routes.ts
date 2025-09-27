@@ -8,7 +8,11 @@ import { verifyJWT } from '@/http/middlewares/verify-jwt'
 export async function userRoutes(app: FastifyInstance) {
   app.post('/users', register)
   app.post('/sessions', authenticate)
-  app.post('/users/:userId/favorites/:haircutId/toggle', choose)
+  app.post(
+    '/users/favorites/:haircutId/toggle',
+    { onRequest: [verifyJWT] },
+    choose,
+  )
 
   app.get('/me', { onRequest: [verifyJWT] }, profile)
 }
