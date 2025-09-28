@@ -1,7 +1,7 @@
 import { env } from './env'
 import z, { ZodError } from 'zod'
 
-import fastify from 'fastify'
+import fastify, { FastifyRequest } from 'fastify'
 import fastifyJwt from '@fastify/jwt'
 import fastifyCookie from '@fastify/cookie'
 import swagger from '@fastify/swagger'

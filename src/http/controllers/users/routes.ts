@@ -5,9 +5,10 @@ import { profile } from './profile'
 import { authenticate } from './authenticate'
 import { verifyJWT } from '@/http/middlewares/verify-jwt'
 import { refresh } from './refresh'
+import { registerDoc } from './docs/register.doc'
 
 export async function userRoutes(app: FastifyInstance) {
-  app.post('/users', register)
+  app.route(registerDoc)
   app.post('/sessions', authenticate)
 
   app.patch('/token/refresh', refresh)
