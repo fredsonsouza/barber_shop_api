@@ -1,9 +1,13 @@
+import { env } from './env'
+import z, { ZodError } from 'zod'
+
 import fastify from 'fastify'
 import fastifyJwt from '@fastify/jwt'
 import fastifyCookie from '@fastify/cookie'
+import swagger from '@fastify/swagger'
+import swaggerUi from '@fastify/swagger-ui'
+
 import { haircutsRoutes } from './http/controllers/haircuts/routes'
-import z, { ZodError } from 'zod'
-import { env } from './env'
 import { barberShopsRoutes } from './http/controllers/barber-shops/routes'
 import { barberCustomersRoutes } from './http/controllers/baber-customers/routes'
 import { checkInsRoutes } from './http/controllers/check-ins/routes'
@@ -11,6 +15,7 @@ import { userRoutes } from './http/controllers/users/routes'
 
 export const app = fastify()
 
+// JWT
 app.register(fastifyJwt, {
   secret: env.JWT_SECRET,
   cookie: {
@@ -24,6 +29,29 @@ app.register(fastifyJwt, {
 
 app.register(fastifyCookie)
 
+// Swagger
+app.register(swagger, {
+  swagger: {
+    info: {
+      title: 'Barber Shop API',
+      description: 'Documentation from API Barber Shop',
+      version: '1.0.0',
+    },
+    host: 'localhost:3333',
+    schemes: ['http'],
+    consumes: ['application/json'],
+    produces: ['application/json'],
+  },
+})
+
+// Swagger UI
+app.register(swaggerUi, {
+  routePrefix: '/docs',
+  staticCSP: true,
+  transformSpecificationClone: true,
+})
+
+// Routes
 app.register(haircutsRoutes)
 app.register(barberShopsRoutes)
 app.register(userRoutes)
