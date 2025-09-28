@@ -1,22 +1,19 @@
-import { registerResponseSchema } from '../schemas/register.schema'
+import z from 'zod'
 import { register } from '../register'
-import { toJsonSchema } from '@/http/utils/zod-to-schema'
+import {
+  registerBodySchema,
+  registerResponseSchema,
+} from '../schemas/register.schema'
 
 export const registerDoc = {
   method: 'POST',
   url: '/users',
   schema: {
-    description: 'Register a new user on system',
+    description: 'Register a new user',
     tags: ['Users'],
+    body: registerBodySchema,
     response: {
-      201: toJsonSchema(registerResponseSchema),
-      409: {
-        desciption: 'User already exsists!',
-        type: 'object',
-        properties: {
-          message: { type: 'string' },
-        },
-      },
+      201: registerResponseSchema,
     },
   },
   handler: register,

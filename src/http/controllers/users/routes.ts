@@ -6,8 +6,9 @@ import { authenticate } from './authenticate'
 import { verifyJWT } from '@/http/middlewares/verify-jwt'
 import { refresh } from './refresh'
 import { registerDoc } from './docs/register.doc'
+import { FastifyTypeInstance } from '@/plugins/types'
 
-export async function userRoutes(app: FastifyInstance) {
+export async function userRoutes(app: FastifyTypeInstance) {
   app.route(registerDoc)
   app.post('/sessions', authenticate)
 
