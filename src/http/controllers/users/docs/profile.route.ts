@@ -1,4 +1,3 @@
-import z from 'zod'
 import { profile } from '../profile'
 import {
   profileNotFoundSchema,

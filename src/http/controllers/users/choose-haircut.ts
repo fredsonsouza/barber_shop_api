@@ -11,11 +11,10 @@ export async function choose(request: FastifyRequest, reply: FastifyReply) {
 
   const chooseFavoriteHaircutUseCase = makeChooseFavoriteHaircutUseCase()
 
-  const { user, haircut, favorited } =
-    await chooseFavoriteHaircutUseCase.execute({
-      userId: request.user.sub,
-      haircutId,
-    })
+  const { haircut, favorited } = await chooseFavoriteHaircutUseCase.execute({
+    userId: request.user.sub,
+    haircutId,
+  })
   return reply.status(200).send({
     userId: request.user.sub,
     haircutId: haircut.id,

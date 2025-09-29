@@ -25,9 +25,12 @@ export const registerBodySchema = z.object({
 
 export const successResponseSchema = z.null().describe('User Created')
 
-export const errorResponseSchema = z.object({
-  message: z.string().describe('Error details, ex: "User already exists!"'),
-})
+export const errorResponseSchema = z
+  .object({
+    message: z.string().describe('Error details, ex: "User already exists!"'),
+  })
+  .describe('Email of already registered user')
+
 export type RegisterBody = z.infer<typeof registerBodySchema>
 export type SuccessResponse = z.infer<typeof successResponseSchema>
 export type ErrorResponseSchema = z.infer<typeof errorResponseSchema>
