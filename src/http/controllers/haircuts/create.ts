@@ -1,26 +1,18 @@
 import { HaircutAlreadyExistsError } from '@/use-cases/error/haircut-already-exists-error'
 import { MakeCreateHaircutUseCase } from '@/use-cases/factories/make-create-haircut-use-case'
 import { FastifyReply, FastifyRequest } from 'fastify'
-import z from 'zod'
+import { createHaircutBodySchema } from './schemas/create.schema'
 
 export async function create(request: FastifyRequest, reply: FastifyReply) {
-  const createHaircutBodySchema = z.object({
-    name: z.string(),
-    description: z.string(),
-    price: z.coerce.number(),
-  })
-
-  const { name, description, price } = createHaircutBodySchema.parse(
-    request.body,
-  )
+  const body = createHaircutBodySchema.parse(request.body)
 
   try {
     const createHaircutUseCase = MakeCreateHaircutUseCase()
 
     await createHaircutUseCase.execute({
-      name,
-      description,
-      price,
+      name: body.name,
+      description: body.description,
+      price: body.price,
     })
   } catch (err) {
     if (err instanceof HaircutAlreadyExistsError) {
