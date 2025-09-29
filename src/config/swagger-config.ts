@@ -12,6 +12,16 @@ export function _setupSwagger(app: FastifyTypeInstance) {
         title: 'API Barber Shop',
         version: '1.0.0',
       },
+      components: {
+        securitySchemes: {
+          bearerAuth: {
+            type: 'http',
+            scheme: 'bearer',
+            bearerFormat: 'JWT',
+            description: 'JWT authentication token',
+          },
+        },
+      },
     },
     transform: jsonSchemaTransform,
     mode: 'dynamic',
