@@ -14,13 +14,10 @@ import {
   validatorCompiler,
   serializerCompiler,
   ZodTypeProvider,
-  jsonSchemaTransform,
 } from 'fastify-type-provider-zod'
-import fastifySwagger from '@fastify/swagger'
-import fastifySwaggerUi from '@fastify/swagger-ui'
+import { setupSwagger } from './config/swagger-config'
 
 export const app = fastify().withTypeProvider<ZodTypeProvider>()
-
 app.setValidatorCompiler(validatorCompiler)
 app.setSerializerCompiler(serializerCompiler)
 
@@ -39,19 +36,7 @@ app.register(fastifyJwt, {
 app.register(fastifyCookie)
 
 // Swagger
-app.register(fastifySwagger, {
-  openapi: {
-    info: {
-      title: 'API Barber Shop',
-      version: '1.0.0',
-    },
-  },
-  transform: jsonSchemaTransform,
-})
-
-app.register(fastifySwaggerUi, {
-  routePrefix: '/docs',
-})
+app.register(setupSwagger)
 
 // Routes
 app.register(haircutsRoutes)

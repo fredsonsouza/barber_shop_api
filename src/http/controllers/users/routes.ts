@@ -1,15 +1,14 @@
-import { FastifyInstance } from 'fastify'
-import { register } from './register'
 import { choose } from './choose-haircut'
 import { profile } from './profile'
 import { authenticate } from './authenticate'
 import { verifyJWT } from '@/http/middlewares/verify-jwt'
 import { refresh } from './refresh'
-import { registerDoc } from './docs/register.doc'
 import { FastifyTypeInstance } from '@/plugins/types'
+import { registerRoute } from './docs/register.route'
 
 export async function userRoutes(app: FastifyTypeInstance) {
-  app.route(registerDoc)
+  app.route(registerRoute)
+
   app.post('/sessions', authenticate)
 
   app.patch('/token/refresh', refresh)

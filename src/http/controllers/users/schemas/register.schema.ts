@@ -23,9 +23,11 @@ export const registerBodySchema = z.object({
   ),
 })
 
-export const registerResponseSchema = z.object({
-  201: z.null().describe('User Created'),
-})
+export const successResponseSchema = z.null().describe('User Created')
 
+export const errorResponseSchema = z.object({
+  message: z.string().describe('Error details, ex: "User already exists!"'),
+})
 export type RegisterBody = z.infer<typeof registerBodySchema>
-export type RegisterResponse = z.infer<typeof registerResponseSchema>
+export type SuccessResponse = z.infer<typeof successResponseSchema>
+export type ErrorResponseSchema = z.infer<typeof errorResponseSchema>

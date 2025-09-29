@@ -1,11 +1,12 @@
 import z from 'zod'
 import { register } from '../register'
 import {
+  errorResponseSchema,
   registerBodySchema,
-  registerResponseSchema,
+  successResponseSchema,
 } from '../schemas/register.schema'
 
-export const registerDoc = {
+export const registerRoute = {
   method: 'POST',
   url: '/users',
   schema: {
@@ -13,7 +14,8 @@ export const registerDoc = {
     tags: ['Users'],
     body: registerBodySchema,
     response: {
-      201: registerResponseSchema,
+      201: successResponseSchema,
+      409: errorResponseSchema,
     },
   },
   handler: register,

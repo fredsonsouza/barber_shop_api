@@ -53,6 +53,7 @@
     "dayjs": "1.11.18",
     "dotenv": "17.2.2",
     "fastify": "^5.6.0",
+    "fastify-plugin": "5.1.0",
     "fastify-type-provider-zod": "6.0.0",
     "zod": "4.1.11"
   }
