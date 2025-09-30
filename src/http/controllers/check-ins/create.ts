@@ -1,41 +1,41 @@
 import { makeCheckInUseCase } from '@/use-cases/factories/make-check-in-use-case'
 import { FastifyReply, FastifyRequest } from 'fastify'
-import z from 'zod'
+import {
+  createCheckInBodySchema,
+  createCheckInParamsSchema,
+} from './schemas/create.schema'
+import { ResourceNotFoundError } from '@/use-cases/error/resource-not-found-error'
+import { MaxDistanceError } from '@/use-cases/error/max-distance-error'
+import { MaxNumberCheckInsError } from '@/use-cases/error/max-number-of-check-ins-error'
 
 export async function create(request: FastifyRequest, reply: FastifyReply) {
-  const createCheckInParamsSchema = z.object({
-    barberId: z.uuid(),
-    barberShopId: z.uuid(),
-    haircutId: z.uuid(),
-  })
+  const params = createCheckInParamsSchema.parse(request.params)
+  const body = createCheckInBodySchema.parse(request.body)
 
-  const createCheckInBodySchema = z.object({
-    latitude: z.number().refine((value) => {
-      return Math.abs(value) <= 90
-    }),
-    longitude: z.number().refine((value) => {
-      return Math.abs(value) <= 100
-    }),
-  })
-  const { barberShopId, barberId, haircutId } = createCheckInParamsSchema.parse(
-    request.params,
-  )
-
-  const { latitude, longitude } = createCheckInBodySchema.parse(request.body)
   try {
     const checkInUseCase = makeCheckInUseCase()
 
     const { checkIn } = await checkInUseCase.execute({
-      barberShopId,
-      barberId,
+      barberShopId: params.barberShopId,
+      barberId: params.barberId,
       userId: request.user.sub,
-      haircutId,
-      userLatitude: latitude,
-      userLongitude: longitude,
+      haircutId: params.haircutId,
+      userLatitude: body.latitude,
+      userLongitude: body.longitude,
     })
 
     return reply.status(201).send({ checkIn })
   } catch (err: any) {
-    return reply.status(400).send({ message: err.message })
+    if (err instanceof ResourceNotFoundError) {
+      return reply.status(404).send({ message: err.message })
+    }
+
+    if (
+      err instanceof MaxDistanceError ||
+      err instanceof MaxNumberCheckInsError
+    ) {
+      return reply.status(400).send({ message: err.message })
+    }
+    console.error(err)
   }
 }

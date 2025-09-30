@@ -1,17 +1,13 @@
 import { FastifyInstance } from 'fastify'
-import { create } from './create'
 import { validate } from './validate'
 import { metrics } from './metrics'
 import { verifyJWT } from '@/http/middlewares/verify-jwt'
 import { verifyUserRole } from '@/http/middlewares/verify-user-role'
+import { createRoute } from './docs/create.route'
 
 export async function checkInsRoutes(app: FastifyInstance) {
   app.addHook('onRequest', verifyJWT)
-  app.post(
-    '/barberShops/:barberShopId/:barberId/:haircutId/check-ins',
-    { onRequest: [verifyUserRole('CUSTOMER')] },
-    create,
-  )
+  app.route({ ...createRoute, onRequest: [verifyUserRole('CUSTOMER')] })
 
   app.patch(
     '/check-ins/:checkInId/validate',
