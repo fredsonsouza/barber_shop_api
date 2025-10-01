@@ -1,17 +1,17 @@
 import { InMemoryCheckInsRepository } from '@/repositories/in-memory/in-memory-check-ins-repository'
 import { beforeEach, describe, expect, it } from 'vitest'
-import { GetCustomerMtricsUseCase } from './get-customer-metrics'
 import { InMemoryHaircutsRepository } from '@/repositories/in-memory/in-memory-haircuts-repository'
+import { GetCustomerMetricsUseCase } from './get-customer-metrics'
 
 let checkInsRepository: InMemoryCheckInsRepository
 let haircutsRepository: InMemoryHaircutsRepository
-let sut: GetCustomerMtricsUseCase
+let sut: GetCustomerMetricsUseCase
 
 describe('Get Customer Metrics Use Case', () => {
   beforeEach(() => {
     checkInsRepository = new InMemoryCheckInsRepository()
     haircutsRepository = new InMemoryHaircutsRepository()
-    sut = new GetCustomerMtricsUseCase(checkInsRepository)
+    sut = new GetCustomerMetricsUseCase(checkInsRepository)
 
     checkInsRepository.users.push({
       id: 'user-01',

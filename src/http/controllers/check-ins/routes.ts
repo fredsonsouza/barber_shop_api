@@ -1,11 +1,11 @@
-import { FastifyInstance } from 'fastify'
 import { validate } from './validate'
-import { metrics } from './metrics'
 import { verifyJWT } from '@/http/middlewares/verify-jwt'
 import { verifyUserRole } from '@/http/middlewares/verify-user-role'
 import { createRoute } from './docs/create.route'
+import { metricsRoute } from './docs/metrics.route'
+import { FastifyTypeInstance } from '@/plugins/types'
 
-export async function checkInsRoutes(app: FastifyInstance) {
+export async function checkInsRoutes(app: FastifyTypeInstance) {
   app.addHook('onRequest', verifyJWT)
   app.route({ ...createRoute, onRequest: [verifyUserRole('CUSTOMER')] })
 
@@ -14,5 +14,5 @@ export async function checkInsRoutes(app: FastifyInstance) {
     { onRequest: [verifyUserRole('ADMIN')] },
     validate,
   )
-  app.get('/check-ins/metrics', metrics)
+  app.route({ ...metricsRoute, onRequest: [verifyJWT] })
 }

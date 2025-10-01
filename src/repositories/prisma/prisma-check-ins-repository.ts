@@ -76,6 +76,7 @@ export class PrismaCheckInsRepository implements CheckInsRepository {
     const map = new Map<
       string,
       {
+        haircutId: string
         haircutName: string
         barberId: string
         barberName: string
@@ -87,17 +88,20 @@ export class PrismaCheckInsRepository implements CheckInsRepository {
       if (!checkIn.haircut_id || !checkIn.barber_id) continue
 
       const key = `${checkIn.haircut_id}-${checkIn.barber_id}`
+
       if (!map.has(key)) {
         map.set(key, {
+          haircutId: checkIn.haircut_id,
           haircutName: checkIn.haircut.name,
           barberId: checkIn.barber.id,
           barberName: checkIn.barber.name,
           count: 1,
         })
       } else {
-        map.get(key)!.count
+        map.get(key)!.count += 1
       }
     }
+
     let favorite: {
       haircutId: string
       haircutName: string
@@ -106,21 +110,11 @@ export class PrismaCheckInsRepository implements CheckInsRepository {
       count: number
     } | null = null
 
-    for (const [key, value] of map.entries()) {
-      const [haircutId] = key.split('-')
-      if (!haircutId) continue
-
+    for (const [, value] of map.entries()) {
       if (!favorite || value.count > favorite.count) {
-        favorite = {
-          haircutId,
-          haircutName: value.haircutName,
-          barberId: value.barberId,
-          barberName: value.barberName,
-          count: value.count,
-        }
+        favorite = value
       }
     }
-
     return favorite
   }
 }

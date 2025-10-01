@@ -4,7 +4,7 @@ interface GetCustomerMtricsUseCaseRequest {
   userCustomerId: string
 }
 
-interface GetCustomerMtricsUseCaseResponse {
+interface GetCustomerMetricsUseCaseResponse {
   checkInsCount: number
   totalSpent: number
   favoriteHaircut: {
@@ -15,12 +15,12 @@ interface GetCustomerMtricsUseCaseResponse {
     count: number
   } | null
 }
-export class GetCustomerMtricsUseCase {
+export class GetCustomerMetricsUseCase {
   constructor(private checkInsrepository: CheckInsRepository) {}
 
   async execute({
     userCustomerId,
-  }: GetCustomerMtricsUseCaseRequest): Promise<GetCustomerMtricsUseCaseResponse> {
+  }: GetCustomerMtricsUseCaseRequest): Promise<GetCustomerMetricsUseCaseResponse> {
     const checkInsCount =
       await this.checkInsrepository.counterByUserId(userCustomerId)
 
