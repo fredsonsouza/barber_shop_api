@@ -57,5 +57,6 @@ export async function authenticate(
     if (err instanceof InvalidCredentialsError) {
       return reply.status(400).send({ message: err.message })
     }
+    console.error(err)
   }
 }
