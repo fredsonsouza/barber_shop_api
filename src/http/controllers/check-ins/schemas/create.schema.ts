@@ -34,7 +34,7 @@ export const unauthorizedErrorSchema = z
       .default('Unauthorized')
       .describe('Token inválido ou ausente.'),
   })
-  .describe('Unauthorized') // Documentação do status
+  .describe('Unauthorized')
 
 export type CreateCheckInParams = z.infer<typeof createCheckInParamsSchema>
 export type CreateCheckInBody = z.infer<typeof createCheckInBodySchema>

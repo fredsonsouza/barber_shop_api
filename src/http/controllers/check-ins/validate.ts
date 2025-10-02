@@ -1,19 +1,27 @@
 import { makeValidationCheckInUseCase } from '@/use-cases/factories/make-validate-check-in-use-case'
 import { FastifyReply, FastifyRequest } from 'fastify'
-import z from 'zod'
+import { validateCheckInParamsSchema } from './schemas/validate.schema'
+import { ResourceNotFoundError } from '@/use-cases/error/resource-not-found-error'
+import { LateCheckInValidationError } from '@/use-cases/error/late-check-in-validation-error'
 
 export async function validate(request: FastifyRequest, reply: FastifyReply) {
-  const validateCheckInParamsSchema = z.object({
-    checkInId: z.uuid(),
-  })
+  const params = validateCheckInParamsSchema.parse(request.params)
 
-  const { checkInId } = validateCheckInParamsSchema.parse(request.params)
+  try {
+    const validateCheckInUseCase = makeValidationCheckInUseCase()
 
-  const validateCheckInUseCase = makeValidationCheckInUseCase()
+    await validateCheckInUseCase.execute({
+      checkInId: params.checkInId,
+    })
 
-  await validateCheckInUseCase.execute({
-    checkInId,
-  })
+    return reply.status(204).send()
+  } catch (err: any) {
+    if (err instanceof ResourceNotFoundError)
+      return reply.status(404).send({ message: err.message })
 
-  return reply.status(204).send()
+    if (err instanceof LateCheckInValidationError) {
+      return reply.status(422).send({ message: err.message })
+    }
+    console.error(err)
+  }
 }
