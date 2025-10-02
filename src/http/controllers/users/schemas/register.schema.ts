@@ -23,7 +23,9 @@ export const registerBodySchema = z.object({
   ),
 })
 
-export const successResponseSchema = z.null().describe('User Created')
+export const successResponseSchema = z
+  .object({})
+  .describe('User Created successfully, returns an empty JSON object.')
 
 export const errorResponseSchema = z
   .object({

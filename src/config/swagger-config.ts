@@ -19,6 +19,13 @@ export function _setupSwagger(app: FastifyTypeInstance) {
             bearerFormat: 'JWT',
             description: 'JWT authentication token',
           },
+          cookieAuth: {
+            type: 'apiKey', // Usado para especificar headers, queries ou cookies
+            in: 'cookie',
+            name: 'refreshToken',
+            description:
+              'Refresh JWT Token stored in HTTP-Only cookie for session renewal.',
+          },
         },
       },
     },
