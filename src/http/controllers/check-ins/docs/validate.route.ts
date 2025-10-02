@@ -13,6 +13,7 @@ export const validateRoute = {
   schema: {
     description: 'Validate a Check-In (Requires JWT Token)',
     tags: ['Check-Ins'],
+    summary: 'Validates a check-in',
     security: [
       {
         bearerAuth: [],

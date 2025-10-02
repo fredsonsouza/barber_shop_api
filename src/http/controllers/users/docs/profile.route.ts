@@ -12,6 +12,7 @@ export const profileRoute = {
   schema: {
     description: 'Get authenticated user profile',
     tags: ['Users'],
+    summary: 'Gets data from an authenticated user',
     security: [
       {
         bearerAuth: [],

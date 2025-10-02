@@ -14,6 +14,7 @@ export const createRoute = {
   schema: {
     description: 'Create a Check-In (Requires JWT and location data)',
     tags: ['Barber Shops'],
+    summary: 'Create a check-in',
     security: [
       {
         bearerAuth: [],

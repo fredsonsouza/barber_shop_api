@@ -1,6 +1,6 @@
-import { FastifyInstance } from 'fastify'
-import { link } from './link-barber'
+import { linkRoute } from './docs/link-barber.route'
+import { FastifyTypeInstance } from '@/plugins/types'
 
-export async function barberCustomersRoutes(app: FastifyInstance) {
-  app.post('/barber-customers/link', link)
+export async function barberCustomersRoutes(app: FastifyTypeInstance) {
+  app.route(linkRoute)
 }

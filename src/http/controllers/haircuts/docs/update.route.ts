@@ -12,6 +12,7 @@ export const updateRoute = {
   schema: {
     description: 'Update a Haircut',
     tags: ['Haircuts'],
+    summary: 'Update a haircut',
     security: [
       {
         bearerAuth: [],

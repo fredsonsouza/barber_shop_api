@@ -12,6 +12,7 @@ export const authenticateRoute = {
     description:
       'Authenticate a user and returns JWT access token. Sets the Refresh Token in an HTTP-only cookie.',
     tags: ['Users'],
+    summary: 'Logs in a user',
     body: authenticateUserBodySchema,
     response: {
       200: authenticateResponseSchema,

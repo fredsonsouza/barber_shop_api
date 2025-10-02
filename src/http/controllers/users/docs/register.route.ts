@@ -11,6 +11,7 @@ export const registerRoute = {
   schema: {
     description: 'Register a new user',
     tags: ['Users'],
+    summary: 'Register a user',
     body: registerBodySchema,
     response: {
       201: successResponseSchema,

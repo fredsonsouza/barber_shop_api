@@ -4,11 +4,13 @@ export const updateHaircutParamsSchema = z.object({
   id: z.uuid(),
 })
 
-export const updateHaircutBodySchema = z.object({
-  name: z.string().optional(),
-  description: z.string().optional(),
-  price: z.coerce.number().optional(),
-})
+export const updateHaircutBodySchema = z
+  .object({
+    name: z.string().optional(),
+    description: z.string().optional(),
+    price: z.coerce.number().optional(),
+  })
+  .describe('Updates data for a haircut')
 
 export const successResponseSchema = z.null().describe('Haircut updated')
 

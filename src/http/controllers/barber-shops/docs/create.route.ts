@@ -11,6 +11,7 @@ export const createRoute = {
   schema: {
     description: 'Create a new Barber Shop',
     tags: ['Barber Shops'],
+    summary: 'Create a barber shop',
     security: [
       {
         bearerAuth: [],
