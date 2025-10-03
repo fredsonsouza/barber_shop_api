@@ -6,8 +6,17 @@ import request from 'supertest'
 export async function createAndAuthenticateUser(
   app: FastifyInstance,
   isAdmin = false,
-  isCustomer: true,
+  isCustomer = false, // Tipo booleano mais flexível
 ) {
+  // ...
+  // Lógica de role simplificada:
+  let role: 'ADMIN' | 'BARBER' | 'CUSTOMER' = 'BARBER'
+
+  if (isAdmin) {
+    role = 'ADMIN'
+  } else if (isCustomer) {
+    role = 'CUSTOMER'
+  }
   await prisma.user.create({
     data: {
       name: 'John Snow',
@@ -15,7 +24,7 @@ export async function createAndAuthenticateUser(
       password_hash: await hash('123456', 6),
       sex: 'Male',
       birth_date: new Date(),
-      role: isAdmin ? 'ADMIN' : isCustomer ? 'CUSTOMER' : 'BARBER',
+      role: role,
     },
   })
 
