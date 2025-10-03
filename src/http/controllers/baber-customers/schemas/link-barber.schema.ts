@@ -2,9 +2,6 @@ import z from 'zod'
 
 export const linkBodySchema = z
   .object({
-    userAsCustomerId: z
-      .uuid()
-      .describe('User ID that will be associated as a Customer.'),
     userAsBarberId: z.uuid().describe('User ID to be associated as Barber'),
   })
   .describe('Data required to associate a client with a barber')

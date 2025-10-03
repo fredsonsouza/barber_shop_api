@@ -24,12 +24,8 @@ export class LinkCustomerToBarberUseCase {
     userAsBarberId,
   }: LinkCustomerToBarberUseCaseRequest): Promise<LinkCustomerToBarberUseCaseResponse> {
     const barber = await this.usersRepository.findById(userAsBarberId)
-    const customer = await this.usersRepository.findById(userAsCustomerId)
 
     if (barber?.role !== 'BARBER') {
-      throw new InvalidUserRoleError()
-    }
-    if (customer?.role !== 'CUSTOMER') {
       throw new InvalidUserRoleError()
     }
     const existingLink =

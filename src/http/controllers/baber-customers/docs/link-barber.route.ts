@@ -13,6 +13,11 @@ export const linkRoute = {
       'Associates a user with the Customer role with a user with the Barber role.',
     tags: ['Barber Customers'],
     summary: 'Create Client-Barber Association',
+    security: [
+      {
+        bearerAuth: [],
+      },
+    ],
     body: linkBodySchema,
     response: {
       201: linkResponseSchema,

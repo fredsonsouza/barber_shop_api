@@ -7,13 +7,16 @@ import { InvalidUserRoleError } from '@/use-cases/error/invalid-user-role-error'
 export async function link(request: FastifyRequest, reply: FastifyReply) {
   const body = linkBodySchema.parse(request.body)
 
+  const userAsCustomerId = request.user.sub
+
   try {
     const linkCustomerToBarberUseCase = makeLinkCustomerToBarberUseCase()
 
     const { link } = await linkCustomerToBarberUseCase.execute({
-      userAsCustomerId: body.userAsCustomerId,
+      userAsCustomerId: userAsCustomerId,
       userAsBarberId: body.userAsBarberId,
     })
+
     return reply.status(201).send({ link })
   } catch (err) {
     if (
