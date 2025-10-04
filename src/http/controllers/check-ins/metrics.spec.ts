@@ -1,10 +1,10 @@
 import { app } from '@/app'
-import request from 'supertest'
 import { prisma } from '@/lib/prisma'
 import { createAndAuthenticateUser } from '@/utils/test/create-and-authenticate-user'
+import request from 'supertest'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
-describe('Validate Check-In (e2e)', () => {
+describe('Check-in Metrics (e2e)', () => {
   beforeAll(async () => {
     await app.ready()
   })
@@ -13,16 +13,12 @@ describe('Validate Check-In (e2e)', () => {
     await app.close()
   })
 
-  it('Should be able to validate check-in', async () => {
-    const { token } = await createAndAuthenticateUser(app, true, false)
+  it('Should be able to get a user metrics', async () => {
+    const { token } = await createAndAuthenticateUser(app, false, true)
 
-    const user = await prisma.user.create({
-      data: {
-        name: 'John Snow',
-        email: 'barber@email.com',
-        password_hash: '123456',
-        sex: 'Male',
-        birth_date: new Date('01/02/1990'),
+    const user = await prisma.user.findFirstOrThrow({
+      where: {
+        role: 'CUSTOMER',
       },
     })
 
@@ -52,29 +48,33 @@ describe('Validate Check-In (e2e)', () => {
       },
     })
 
-    let checkIn = await prisma.checkIn.create({
-      data: {
-        user_id: user.id,
-        barber_id: barber.id,
-        barber_shop_id: barberShop.id,
-        haircut_id: haircut.id,
-        price: haircut.price,
-        created_at: new Date(),
-      },
+    await prisma.checkIn.createMany({
+      data: [
+        {
+          user_id: user.id,
+          barber_id: barber.id,
+          barber_shop_id: barberShop.id,
+          haircut_id: haircut.id,
+          price: haircut.price,
+          created_at: new Date(),
+        },
+        {
+          user_id: user.id,
+          barber_id: barber.id,
+          barber_shop_id: barberShop.id,
+          haircut_id: haircut.id,
+          price: haircut.price,
+          created_at: new Date(),
+        },
+      ],
     })
 
     const response = await request(app.server)
-      .patch(`/check-ins/${checkIn.id}/validate`)
+      .get('/check-ins/customer-metrics')
       .set('Authorization', `Bearer ${token}`)
       .send()
 
-    expect(response.statusCode).toEqual(204)
-
-    checkIn = await prisma.checkIn.findFirstOrThrow({
-      where: {
-        id: checkIn.id,
-      },
-    })
-    expect(checkIn.validated_at).toEqual(expect.any(Date))
+    expect(response.statusCode).toEqual(200)
+    expect(response.body.checkInsCount).toEqual(2)
   })
 })
