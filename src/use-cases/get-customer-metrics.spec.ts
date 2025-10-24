@@ -30,7 +30,7 @@ describe('Get Customer Metrics Use Case', () => {
       name: 'John Snow',
       email: 'johnsnow@email.com',
       password_hash: '123456',
-      role: 'CUSTOMER',
+      role: 'BARBER',
       sex: 'Male',
       phone: '122222',
       created_at: new Date(),

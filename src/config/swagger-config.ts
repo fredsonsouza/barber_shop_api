@@ -9,6 +9,7 @@ export function _setupSwagger(app: FastifyTypeInstance) {
     openapi: {
       info: {
         title: 'API Barber Shop',
+        description: 'Full-stack api with Nodejs',
         version: '1.0.0',
       },
       components: {
@@ -36,7 +37,7 @@ export function _setupSwagger(app: FastifyTypeInstance) {
   app.register(fastifySwaggerUi, {
     routePrefix: '/docs',
     uiConfig: {
-      docExpansion: 'full',
+      // docExpansion: 'full',
       deepLinking: false,
     },
     staticCSP: true,

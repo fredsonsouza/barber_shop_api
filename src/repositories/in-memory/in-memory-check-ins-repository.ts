@@ -8,6 +8,112 @@ export class InMemoryCheckInsRepository implements CheckInsRepository {
   public users: User[] = []
   public haircuts: Haircut[] = []
 
+  async countByBarberId(barberId: string) {
+    return this.items.filter((item) => item.barber_id === barberId).length
+  }
+
+  async totalRevenueByBarber(barberId: string) {
+    const barberCheckIns = this.items.filter(
+      (item) => item.barber_id === barberId,
+    )
+
+    const totalRevenue = barberCheckIns.reduce(
+      (acc, checkIn) => acc + Number(checkIn.price),
+      0,
+    )
+
+    return totalRevenue
+  }
+
+  async findMostFrequentCustomerByBarber(barberId: string) {
+    const barberCheckIns = this.items.filter(
+      (item) => item.barber_id === barberId,
+    )
+
+    if (barberCheckIns.length === 0) {
+      return null
+    }
+
+    const customerCounts: Record<string, number> = {}
+    for (const checkIn of barberCheckIns) {
+      customerCounts[checkIn.user_id] =
+        (customerCounts[checkIn.user_id] || 0) + 1
+    }
+
+    let mostFrequentCustomerId: string | null = null
+    let maxCount = 0
+
+    for (const [customerId, count] of Object.entries(customerCounts)) {
+      if (count > maxCount) {
+        maxCount = count
+        mostFrequentCustomerId = customerId
+      }
+    }
+
+    if (!mostFrequentCustomerId) {
+      return null
+    }
+
+    const customer = this.users.find(
+      (user) => user.id === mostFrequentCustomerId,
+    )
+    if (!customer) {
+      return null
+    }
+    return {
+      customerId: customer.id,
+      customerName: customer.name,
+      count: maxCount,
+    }
+  }
+  async findMostFrequentHaircutByBarber(barberId: string) {
+    const barberCheckIns = this.items.filter(
+      (item) => item.barber_id === barberId,
+    )
+
+    if (barberCheckIns.length === 0) {
+      return null
+    }
+
+    const haircutCounts: Record<string, number> = {}
+    for (const checkIn of barberCheckIns) {
+      if (checkIn.haircut_id) {
+        haircutCounts[checkIn.haircut_id] =
+          (haircutCounts[checkIn.haircut_id] || 0) + 1
+      }
+    }
+
+    if (Object.keys(haircutCounts).length === 0) {
+      return null
+    }
+
+    let mostFrequentHaircutId: string | null = null
+    let maxCount = 0
+
+    for (const [haircutId, count] of Object.entries(haircutCounts)) {
+      if (count > maxCount) {
+        maxCount = count
+        mostFrequentHaircutId = haircutId
+      }
+    }
+
+    if (!mostFrequentHaircutId) {
+      return null
+    }
+
+    const haircut = this.haircuts.find((h) => h.id === mostFrequentHaircutId)
+
+    if (!haircut) {
+      return null // Inconsistência de dados, corte de cabelo não encontrado
+    }
+
+    return {
+      haircutId: haircut.id,
+      haircutName: haircut.name,
+      count: maxCount,
+    }
+  }
+
   async findById(id: string) {
     return this.items.find((checkIn) => checkIn.id === id) ?? null
   }
