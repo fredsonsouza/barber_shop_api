@@ -5,7 +5,6 @@ import fastify from 'fastify'
 import fastifyJwt from '@fastify/jwt'
 import fastifyCookie from '@fastify/cookie'
 
-import { haircutsRoutes } from './http/controllers/haircuts/routes'
 import { barberShopsRoutes } from './http/controllers/barber-shops/routes'
 import { barberCustomersRoutes } from './http/controllers/baber-customers/routes'
 import { checkInsRoutes } from './http/controllers/check-ins/routes'
@@ -19,6 +18,7 @@ import { setupSwagger } from './config/swagger-config'
 import fastifyMultipart from '@fastify/multipart'
 import fastifyStatic from '@fastify/static'
 import { UPLOADS_FOLDER } from './config/upload'
+import { createHaircut } from './http/controllers/haircuts/create-haircut'
 
 export const app = fastify().withTypeProvider<ZodTypeProvider>()
 app.setValidatorCompiler(validatorCompiler)
@@ -53,7 +53,7 @@ app.register(fastifyCookie)
 app.register(setupSwagger)
 
 // Routes
-app.register(haircutsRoutes)
+app.register(createHaircut)
 app.register(barberShopsRoutes)
 app.register(userRoutes)
 app.register(barberCustomersRoutes)

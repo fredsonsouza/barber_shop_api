@@ -9,7 +9,7 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-
+   
     "module": "nodenext",
     "target": "es2022",
     "types": ["node"],
@@ -28,5 +28,13 @@
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
     "skipLibCheck": true,
-  }
+
+    "typeRoots": ["./node_modules/@types", "./@types"]
+  },
+
+  "include": [
+    "src",
+    "@types" 
+  ]
+
 }
