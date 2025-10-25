@@ -22,6 +22,7 @@ export class PrismaHaircutsRepository implements HaircutsRepository {
           description: params.description,
         }),
         ...(params.price !== undefined && { price: params.price }),
+        ...(params.imageUrl !== undefined && { image_url: params.imageUrl }),
       },
     })
     return haircut

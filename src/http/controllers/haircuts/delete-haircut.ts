@@ -4,6 +4,7 @@ import { verifyJWT } from '@/http/middlewares/verify-jwt'
 import { verifyUserRole } from '@/http/middlewares/verify-user-role'
 import { MakeDeleteHaircutUseCase } from '@/use-cases/factories/make-delete-haircut-use-case'
 import { HaircutNotFoundError } from '@/use-cases/error/haircut-not-found-error'
+import { InvalidCredentialsError } from '@/use-cases/error/invalid-credentials-error'
 
 const deleteHaircutParamsSchema = z.object({
   id: z.uuid(),
@@ -63,6 +64,9 @@ export async function deleteHaircut(app: FastifyInstance) {
         }
         if (err instanceof HaircutNotFoundError) {
           return reply.status(404).send({ message: err.message })
+        }
+        if (err instanceof InvalidCredentialsError) {
+          return reply.status(401).send({ message: err.message })
         }
       }
     },

@@ -19,6 +19,7 @@ import fastifyStatic from '@fastify/static'
 import { UPLOADS_FOLDER } from './config/upload'
 import { createHaircut } from './http/controllers/haircuts/create-haircut'
 import { deleteHaircut } from './http/controllers/haircuts/delete-haircut'
+import { updateHaircut } from './http/controllers/haircuts/update-haircut'
 
 export const app = fastify()
 app.setValidatorCompiler(validatorCompiler)
@@ -55,6 +56,7 @@ app.register(setupSwagger)
 // Routes
 app.register(createHaircut)
 app.register(deleteHaircut)
+app.register(updateHaircut)
 app.register(barberShopsRoutes)
 app.register(userRoutes)
 app.register(barberCustomersRoutes)

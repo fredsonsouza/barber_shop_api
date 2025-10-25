@@ -53,12 +53,12 @@ model BarberShop {
 }
 
 model Haircut {
-  id          String    @id @default(uuid())
+  id          String   @id @default(uuid())
   name        String
   description String
-  price       Decimal   @db.Decimal(10, 2)
-  created_at  DateTime  @default(now())
-  updated_at  DateTime?
+  price       Decimal  @db.Decimal(10, 2)
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
   image_url   String
 
   customer    User[]                @relation("CustomerHaircuts")
