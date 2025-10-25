@@ -4,6 +4,7 @@ export interface UpdateHaircutParams {
   name?: string
   description?: string
   price?: number
+  imageUrl: string
 }
 export interface HaircutsRepository {
   findByName(name: string): Promise<Haircut | null>

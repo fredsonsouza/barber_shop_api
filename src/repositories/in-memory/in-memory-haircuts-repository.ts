@@ -37,6 +37,7 @@ export class InMemoryHaircutsRepository implements HaircutsRepository {
     const haircut = {
       id: data.id ?? randomUUID(),
       name: data.name,
+      image_url: data.image_url,
       description: data.description,
       price: new Prisma.Decimal(data.price.toString()),
       created_at: new Date(),

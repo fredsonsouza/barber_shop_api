@@ -3,3 +3,5 @@ generated
 .env
 coverage
 dist
+/tmp
+/uploads

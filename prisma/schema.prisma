@@ -59,6 +59,7 @@ model Haircut {
   price       Decimal   @db.Decimal(10, 2)
   created_at  DateTime  @default(now())
   updated_at  DateTime?
+  image_url   String
 
   customer    User[]                @relation("CustomerHaircuts")
   favoritedBy UserFavoriteHaircut[]

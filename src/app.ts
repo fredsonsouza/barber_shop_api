@@ -16,6 +16,9 @@ import {
   ZodTypeProvider,
 } from 'fastify-type-provider-zod'
 import { setupSwagger } from './config/swagger-config'
+import fastifyMultipart from '@fastify/multipart'
+import fastifyStatic from '@fastify/static'
+import { UPLOADS_FOLDER } from './config/upload'
 
 export const app = fastify().withTypeProvider<ZodTypeProvider>()
 app.setValidatorCompiler(validatorCompiler)
@@ -31,6 +34,17 @@ app.register(fastifyJwt, {
   sign: {
     expiresIn: '10m',
   },
+})
+
+app.register(fastifyMultipart, {
+  limits: {
+    fileSize: 1024 * 1024 * 5,
+  },
+})
+
+app.register(fastifyStatic, {
+  root: UPLOADS_FOLDER,
+  prefix: '/files',
 })
 
 app.register(fastifyCookie)

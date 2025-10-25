@@ -18,7 +18,17 @@ export const createRoute = {
         bearerAuth: [],
       },
     ],
-    body: createHaircutBodySchema,
+    consumes: ['multipart/form-data'],
+    // body: {
+    //   type: 'object',
+    //   required: ['name', 'description', 'price', 'image'],
+    //   properties: {
+    //     name: { type: 'string' },
+    //     description: { type: 'string' },
+    //     price: { type: 'number', format: 'float' }, // 'number' é melhor para docs
+    //     image: { type: 'string', format: 'binary' }, // 'binary' indica um arquivo
+    //   },
+    // },
     response: {
       201: successResponseSchema,
       401: unauthorizedSchema,
