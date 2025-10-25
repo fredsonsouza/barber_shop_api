@@ -2,17 +2,17 @@ import { beforeEach, describe, expect, it } from 'vitest'
 import { InMemoryHaircutsRepository } from '@/repositories/in-memory/in-memory-haircuts-repository'
 import { CreateHaircutUseCase } from './create-haircut'
 import { HaircutAlreadyExistsError } from './error/haircut-already-exists-error'
-import { InMemorySTorageProvider } from '@/repositories/in-memory/in-memory-storage-provider'
 import { InvalidFileTypeError } from './error/invalid-file-type-error'
+import { InMemoryStorageProvider } from '@/repositories/in-memory/in-memory-storage-provider'
 
 let haircutsRepository: InMemoryHaircutsRepository
-let storageProvider: InMemorySTorageProvider
+let storageProvider: InMemoryStorageProvider
 let sut: CreateHaircutUseCase
 
 describe('Create Haircut', () => {
   beforeEach(() => {
     haircutsRepository = new InMemoryHaircutsRepository()
-    storageProvider = new InMemorySTorageProvider()
+    storageProvider = new InMemoryStorageProvider()
     sut = new CreateHaircutUseCase(haircutsRepository, storageProvider)
   })
   it('Should be able to create a haircut', async () => {

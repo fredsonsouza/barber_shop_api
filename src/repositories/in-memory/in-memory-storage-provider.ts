@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto'
 import type { StorageProvider } from '../storage-provider'
 
-export class InMemorySTorageProvider implements StorageProvider {
+export class InMemoryStorageProvider implements StorageProvider {
   public files: string[] = []
   async save(tempFileName: string) {
     this.files.push(tempFileName)

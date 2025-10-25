@@ -47,4 +47,11 @@ export class InMemoryHaircutsRepository implements HaircutsRepository {
 
     return haircut
   }
+  async delete(id: string) {
+    const haircutIndex = this.items.findIndex((item) => item.id === id)
+
+    if (haircutIndex > -1) {
+      this.items.splice(haircutIndex, 1)
+    }
+  }
 }

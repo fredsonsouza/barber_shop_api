@@ -16,7 +16,19 @@ export class LocalDiskStorageProvider implements StorageProvider {
       throw new Error('File not found')
     }
   }
-  delete(fileKey: string): Promise<void> {
-    throw new Error('Method not implemented.')
+  async delete(fileKey: string) {
+    const filePath = path.resolve(UPLOADS_FOLDER, fileKey)
+
+    try {
+      await fs.stat(filePath)
+    } catch {
+      return
+    }
+    try {
+      await fs.unlink(filePath)
+    } catch (err) {
+      console.error('Error deleting file:', err)
+      throw new Error('Error deleting file')
+    }
   }
 }

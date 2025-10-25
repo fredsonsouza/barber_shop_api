@@ -11,4 +11,5 @@ export interface HaircutsRepository {
   findById(id: string): Promise<Haircut | null>
   create(data: Prisma.HaircutCreateInput): Promise<Haircut>
   update(id: string, params: UpdateHaircutParams): Promise<Haircut | null>
+  delete(id: string): Promise<void>
 }

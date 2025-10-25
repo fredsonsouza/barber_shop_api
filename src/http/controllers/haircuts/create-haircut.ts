@@ -5,7 +5,6 @@ import z from 'zod'
 import { parseMultipart } from '@/http/hooks/parse-multipart'
 import type { FastifyInstance } from 'fastify/types/instance'
 import { unlink } from 'node:fs/promises'
-import type { ZodTypeProvider } from 'fastify-type-provider-zod'
 
 const createHaircutBodySchema = z.object({
   name: z.string(),
@@ -14,7 +13,7 @@ const createHaircutBodySchema = z.object({
 })
 
 export async function createHaircut(app: FastifyInstance) {
-  app.withTypeProvider<ZodTypeProvider>().post(
+  app.post(
     '/haircuts',
     {
       preHandler: [parseMultipart],
@@ -25,23 +24,58 @@ export async function createHaircut(app: FastifyInstance) {
           } catch (err) {}
         }
       },
+      validatorCompiler: undefined,
+      serializerCompiler: undefined,
 
       schema: {
-        tags: ['Haircuts'],
+        tags: ['haircuts'],
         summary: 'Create a haircut',
         description: 'Create a new Haircut',
         security: [{ bearerAuth: [] }],
         consumes: ['multipart/form-data'],
-        requestBody: createHaircutBodySchema,
+        requestBody: {
+          required: true,
+          content: {
+            'multipart/form-data': {
+              schema: {
+                type: 'object',
+                properties: {
+                  name: { type: 'string' },
+                  description: { type: 'string' },
+                  price: { type: 'number', format: 'float' },
+                  image: { type: 'string', format: 'binary' },
+                },
+                required: ['name', 'description', 'price', 'image'],
+              },
+            },
+          },
+        },
         response: {
-          201: z.null().describe('Haircut created'),
-          400: z.object({ message: z.string(), issues: z.any().optional() }),
-          409: z.object({ message: z.string() }),
-          401: z.object({ message: z.string() }),
+          201: {
+            description: 'Haircut created',
+            type: 'null',
+          },
+          400: {
+            description: 'Bad Request',
+            type: 'object',
+            properties: {
+              message: { type: 'string' },
+              issues: { type: 'array', items: {} }, // 'issues' é opcional
+            },
+          },
+          409: {
+            description: 'Conflict',
+            type: 'object',
+            properties: { message: { type: 'string' } },
+          },
+          401: {
+            description: 'Unauthorized',
+            type: 'object',
+            properties: { message: { type: 'string' } },
+          },
         },
       },
     },
-
     async (request, reply) => {
       try {
         const body = createHaircutBodySchema.parse(request.multipart.body)
@@ -66,6 +100,11 @@ export async function createHaircut(app: FastifyInstance) {
           imageMimeType: mimetype,
         })
       } catch (err) {
+        if (err instanceof z.ZodError) {
+          return reply
+            .status(400)
+            .send({ message: 'Validation error.', issues: err.format() })
+        }
         if (err instanceof HaircutAlreadyExistsError) {
           return reply.status(409).send({ message: err.message })
         }

@@ -40,4 +40,11 @@ export class PrismaHaircutsRepository implements HaircutsRepository {
 
     return haircut
   }
+  async delete(id: string) {
+    await prisma.haircut.delete({
+      where: {
+        id,
+      },
+    })
+  }
 }
