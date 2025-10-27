@@ -1,17 +1,17 @@
 import { env } from './env'
-import z, { ZodError } from 'zod'
+import { ZodError } from 'zod'
 
 import fastify from 'fastify'
 import fastifyJwt from '@fastify/jwt'
 import fastifyCookie from '@fastify/cookie'
 
-import { barberShopsRoutes } from './http/controllers/barber-shops/routes'
 import { barberCustomersRoutes } from './http/controllers/baber-customers/routes'
 import { checkInsRoutes } from './http/controllers/check-ins/routes'
 import { userRoutes } from './http/controllers/users/routes'
 import {
   validatorCompiler,
   serializerCompiler,
+  type ZodTypeProvider,
 } from 'fastify-type-provider-zod'
 import { setupSwagger } from './config/swagger-config'
 import fastifyMultipart from '@fastify/multipart'
@@ -20,8 +20,10 @@ import { UPLOADS_FOLDER } from './config/upload'
 import { createHaircut } from './http/controllers/haircuts/create-haircut'
 import { deleteHaircut } from './http/controllers/haircuts/delete-haircut'
 import { updateHaircut } from './http/controllers/haircuts/update-haircut'
+import { createBarberShop } from './http/controllers/barber-shops/create-barber-shop'
 
-export const app = fastify()
+export const app = fastify().withTypeProvider<ZodTypeProvider>()
+
 app.setValidatorCompiler(validatorCompiler)
 app.setSerializerCompiler(serializerCompiler)
 
@@ -57,7 +59,9 @@ app.register(setupSwagger)
 app.register(createHaircut)
 app.register(deleteHaircut)
 app.register(updateHaircut)
-app.register(barberShopsRoutes)
+
+app.register(createBarberShop)
+
 app.register(userRoutes)
 app.register(barberCustomersRoutes)
 app.register(checkInsRoutes)
@@ -66,7 +70,7 @@ app.setErrorHandler((error, _, reply) => {
   if (error instanceof ZodError) {
     return reply
       .status(400)
-      .send({ message: 'Validation error', issues: z.treeifyError(error) })
+      .send({ message: error.issues[0]?.message ?? 'Invalid input data.' })
   }
 
   if (env.NODE_ENV !== 'production') {

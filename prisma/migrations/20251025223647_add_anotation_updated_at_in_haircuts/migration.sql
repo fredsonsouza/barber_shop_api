@@ -5,4 +5,4 @@
 
 */
 -- AlterTable
-ALTER TABLE "public"."haircuts" ALTER COLUMN "updated_at" SET NOT NULL;
+ALTER TABLE "haircuts" ALTER COLUMN "updated_at" SET NOT NULL;

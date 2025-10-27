@@ -1,78 +1,42 @@
 import { HaircutAlreadyExistsError } from '@/use-cases/error/haircut-already-exists-error'
-import { MakeCreateHaircutUseCase } from '@/use-cases/factories/make-create-haircut-use-case'
 import { InvalidFileTypeError } from '@/use-cases/error/invalid-file-type-error'
-import z from 'zod'
+import { MakeCreateHaircutUseCase } from '@/use-cases/factories/make-create-haircut-use-case'
 import { parseMultipart } from '@/http/hooks/parse-multipart'
-import type { FastifyInstance } from 'fastify/types/instance'
+import { verifyJWT } from '@/http/middlewares/verify-jwt'
+import { verifyUserRole } from '@/http/middlewares/verify-user-role'
 import { unlink } from 'node:fs/promises'
+import z from 'zod'
+import type { FastifyInstance } from 'fastify'
+import type { ZodTypeProvider } from 'fastify-type-provider-zod'
 
 const createHaircutBodySchema = z.object({
-  name: z.string(),
-  description: z.string(),
-  price: z.coerce.number(),
+  name: z.string().min(1),
+  description: z.string().min(1),
+  price: z.coerce.number().positive(),
 })
 
 export async function createHaircut(app: FastifyInstance) {
-  app.post(
+  app.withTypeProvider<ZodTypeProvider>().post(
     '/haircuts',
     {
-      preHandler: [parseMultipart],
+      preHandler: [verifyJWT, verifyUserRole('ADMIN'), parseMultipart],
       onResponse: async (request) => {
-        if (request.multipart?.file.tempPath) {
+        if (request.multipart?.file?.tempPath) {
           try {
             await unlink(request.multipart.file.tempPath)
-          } catch (err) {}
+          } catch {}
         }
       },
-      validatorCompiler: undefined,
-      serializerCompiler: undefined,
-
       schema: {
-        tags: ['haircuts'],
-        summary: 'Create a haircut',
-        description: 'Create a new Haircut',
+        tags: ['Haircuts'],
+        summary: 'Create a new haircut',
         security: [{ bearerAuth: [] }],
         consumes: ['multipart/form-data'],
-        requestBody: {
-          required: true,
-          content: {
-            'multipart/form-data': {
-              schema: {
-                type: 'object',
-                properties: {
-                  name: { type: 'string' },
-                  description: { type: 'string' },
-                  price: { type: 'number', format: 'float' },
-                  image: { type: 'string', format: 'binary' },
-                },
-                required: ['name', 'description', 'price', 'image'],
-              },
-            },
-          },
-        },
+        body: z.any(),
         response: {
-          201: {
-            description: 'Haircut created',
-            type: 'null',
-          },
-          400: {
-            description: 'Bad Request',
-            type: 'object',
-            properties: {
-              message: { type: 'string' },
-              issues: { type: 'array', items: {} }, // 'issues' é opcional
-            },
-          },
-          409: {
-            description: 'Conflict',
-            type: 'object',
-            properties: { message: { type: 'string' } },
-          },
-          401: {
-            description: 'Unauthorized',
-            type: 'object',
-            properties: { message: { type: 'string' } },
-          },
+          201: z.null(),
+          400: z.object({ message: z.string() }),
+          409: z.object({ message: z.string() }),
         },
       },
     },
@@ -80,17 +44,20 @@ export async function createHaircut(app: FastifyInstance) {
       try {
         const body = createHaircutBodySchema.parse(request.multipart.body)
 
-        const { name, description, price } = body
-        const createHaircutUseCase = MakeCreateHaircutUseCase()
-
         if (
           !request.multipart.file?.filename ||
           !request.multipart.file?.mimetype
         ) {
-          return reply.status(400).send({ message: 'Image file is required.' })
+          return reply.status(400).send({
+            message: 'Image file is required.',
+          })
         }
 
         const { filename, mimetype } = request.multipart.file
+
+        const { name, description, price } = body
+
+        const createHaircutUseCase = MakeCreateHaircutUseCase()
 
         await createHaircutUseCase.execute({
           name,
@@ -99,12 +66,9 @@ export async function createHaircut(app: FastifyInstance) {
           imageTempFileName: filename,
           imageMimeType: mimetype,
         })
+
+        return reply.status(201).send()
       } catch (err) {
-        if (err instanceof z.ZodError) {
-          return reply
-            .status(400)
-            .send({ message: 'Validation error.', issues: err.format() })
-        }
         if (err instanceof HaircutAlreadyExistsError) {
           return reply.status(409).send({ message: err.message })
         }
@@ -112,8 +76,9 @@ export async function createHaircut(app: FastifyInstance) {
         if (err instanceof InvalidFileTypeError) {
           return reply.status(400).send({ message: err.message })
         }
+
+        throw err
       }
-      return reply.status(201).send()
     },
   )
 }

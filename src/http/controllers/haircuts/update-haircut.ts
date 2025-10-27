@@ -21,8 +21,7 @@ export async function updateHaircut(app: FastifyInstance) {
   app.put(
     '/haircuts/:id',
     {
-      onRequest: [verifyJWT, verifyUserRole('ADMIN')],
-      preHandler: [parseMultipart],
+      preHandler: [parseMultipart, verifyJWT, verifyUserRole('ADMIN')],
 
       onResponse: async (request) => {
         if (request.multipart?.file.tempPath) {
@@ -32,78 +31,35 @@ export async function updateHaircut(app: FastifyInstance) {
         }
       },
 
-      validatorCompiler: undefined,
-      serializerCompiler: undefined,
-
       schema: {
         tags: ['Haircuts'],
         summary: 'Update a haircut',
         description: 'Update an existing haircut. Fields are optional.',
         security: [{ bearerAuth: [] }],
         consumes: ['multipart/form-data'],
-
-        params: updateParamsSchema,
-
-        requestBody: {
-          description: 'Fields to update (all optional).',
-          content: {
-            'multipart/form-data': {
-              schema: {
-                type: 'object',
-                properties: {
-                  name: { type: 'string' },
-                  description: { type: 'string' },
-                  price: { type: 'number', format: 'float' },
-                  image: { type: 'string', format: 'binary' },
-                },
-              },
-            },
-          },
-        },
-
+        params: z.any(),
+        body: z.any(),
         response: {
-          200: {
-            description: 'Updated haircut',
-            type: 'object',
-            properties: {
-              id: { type: 'string', format: 'uuid' },
-              name: { type: 'string' },
-              description: { type: 'string' },
-              price: { type: 'number' },
-              image_url: { type: 'string', nullable: true },
-              created_at: { type: 'string', format: 'date-time' },
-              updated_at: { type: 'string', format: 'date-time' },
-            },
-          },
-          400: {
-            description: 'Bad Request',
-            type: 'object',
-            properties: { message: { type: 'string' } },
-          },
-          401: {
-            description: 'Unauthorized',
-            type: 'object',
-            properties: { message: { type: 'string' } },
-          },
-          404: {
-            description: 'Not Found',
-            type: 'object',
-            properties: { message: { type: 'string' } },
-          },
+          204: z.null(),
+          400: z.object({
+            message: z.string(),
+          }),
+          404: z.object({
+            message: z.string(),
+          }),
         },
       },
     },
     async (request, reply) => {
       try {
         const { id } = updateParamsSchema.parse(request.params)
-
         const body = updateBodySchema.parse(request.multipart.body)
 
         const { file } = request.multipart
 
         const updateHaircutUseCase = makeUpdateHaircutUseCase()
 
-        const { updatedHaircut } = await updateHaircutUseCase.execute({
+        await updateHaircutUseCase.execute({
           id,
           name: body.name,
           description: body.description,
@@ -112,19 +68,15 @@ export async function updateHaircut(app: FastifyInstance) {
           imageMimeType: file.mimetype ?? undefined,
         })
 
-        return reply.status(200).send(updatedHaircut)
+        return reply.status(204).send()
       } catch (err) {
-        if (err instanceof z.ZodError) {
-          return reply
-            .status(400)
-            .send({ message: 'Validation error.', issues: err.format() })
-        }
         if (err instanceof ResourceNotFoundError) {
           return reply.status(404).send({ message: err.message })
         }
         if (err instanceof InvalidFileTypeError) {
           return reply.status(400).send({ message: err.message })
         }
+        throw err
       }
     },
   )

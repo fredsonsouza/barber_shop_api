@@ -5,4 +5,4 @@
 
 */
 -- AlterTable
-ALTER TABLE "public"."haircuts" ADD COLUMN     "image_url" TEXT NOT NULL;
+ALTER TABLE "haircuts" ADD COLUMN     "image_url" TEXT NOT NULL;

@@ -14,35 +14,26 @@ export async function deleteHaircut(app: FastifyInstance) {
   app.delete(
     '/haircuts/:id',
     {
-      onRequest: [verifyJWT, verifyUserRole('ADMIN')],
-      validatorCompiler: undefined,
-      serializerCompiler: undefined,
+      preHandler: [verifyJWT, verifyUserRole('ADMIN')],
+
       schema: {
-        tags: ['haircuts'],
+        tags: ['Haircuts'],
         summary: 'Delete a haircut',
         description: 'Delete an existing haircut by ID',
         security: [{ bearerAuth: [] }],
-        params: deleteHaircutParamsSchema,
+        params: z.any(),
 
         response: {
-          204: {
-            description: 'Success: No Content',
-          },
-          400: {
-            description: 'Bad Request',
-            type: 'object',
-            properties: { message: { type: 'string' } },
-          },
-          401: {
-            description: 'Unauthorized',
-            type: 'object',
-            properties: { message: { type: 'string' } },
-          },
-          404: {
-            description: 'Not Found',
-            type: 'object',
-            properties: { message: { type: 'string' } },
-          },
+          204: z.object({
+            message: z.string(),
+          }),
+
+          404: z.object({
+            message: z.string(),
+          }),
+          401: z.object({
+            message: z.string(),
+          }),
         },
       },
     },
@@ -59,15 +50,13 @@ export async function deleteHaircut(app: FastifyInstance) {
 
         return reply.status(204).send()
       } catch (err) {
-        if (err instanceof z.ZodError) {
-          return reply.status(400).send({ message: 'Invalid ID format.' })
-        }
         if (err instanceof HaircutNotFoundError) {
           return reply.status(404).send({ message: err.message })
         }
         if (err instanceof InvalidCredentialsError) {
           return reply.status(401).send({ message: err.message })
         }
+        throw err
       }
     },
   )

@@ -1,11 +1,10 @@
-import { FastifyTypeInstance } from '@/plugins/types'
 import fastifySwagger from '@fastify/swagger'
 import fastifySwaggerUi from '@fastify/swagger-ui'
+import type { FastifyInstance } from 'fastify'
 import fastifyPlugin from 'fastify-plugin'
 import { jsonSchemaTransform } from 'fastify-type-provider-zod'
-import z from 'zod'
 
-export function _setupSwagger(app: FastifyTypeInstance) {
+export function _setupSwagger(app: FastifyInstance) {
   app.register(fastifySwagger, {
     openapi: {
       info: {
@@ -22,7 +21,7 @@ export function _setupSwagger(app: FastifyTypeInstance) {
             description: 'JWT authentication token',
           },
           cookieAuth: {
-            type: 'apiKey', // Usado para especificar headers, queries ou cookies
+            type: 'apiKey',
             in: 'cookie',
             name: 'refreshToken',
             description:
@@ -31,20 +30,7 @@ export function _setupSwagger(app: FastifyTypeInstance) {
         },
       },
     },
-    transform: (props) => {
-      const { schema } = props
-
-      // Se o schema NÃO for um objeto Zod (ou seja, é JSON puro),
-      // retorne o 'props' original, sem modificar.
-      if (!schema || !(schema instanceof z.ZodType)) {
-        return props
-      }
-
-      // Se FOR um schema Zod, chame o transformador padrão
-      // passando o 'props' inteiro.
-      return jsonSchemaTransform(props)
-    },
-    mode: 'dynamic',
+    transform: jsonSchemaTransform,
   })
 
   app.register(fastifySwaggerUi, {
