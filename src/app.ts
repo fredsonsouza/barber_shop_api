@@ -1,5 +1,5 @@
 import { env } from './env'
-import { ZodError } from 'zod'
+import z, { ZodError } from 'zod'
 
 import fastify from 'fastify'
 import fastifyJwt from '@fastify/jwt'
@@ -7,7 +7,6 @@ import fastifyCookie from '@fastify/cookie'
 
 import { barberCustomersRoutes } from './http/controllers/baber-customers/routes'
 import { checkInsRoutes } from './http/controllers/check-ins/routes'
-import { userRoutes } from './http/controllers/users/routes'
 import {
   validatorCompiler,
   serializerCompiler,
@@ -21,6 +20,11 @@ import { createHaircut } from './http/controllers/haircuts/create-haircut'
 import { deleteHaircut } from './http/controllers/haircuts/delete-haircut'
 import { updateHaircut } from './http/controllers/haircuts/update-haircut'
 import { createBarberShop } from './http/controllers/barber-shops/create-barber-shop'
+import { registerUser } from './http/controllers/users/register-user'
+import { authenticateUser } from './http/controllers/users/authenticate-user'
+import { getUserProfile } from './http/controllers/users/get-user-profile'
+import { refreshUserToken } from './http/controllers/users/refresh-user-token'
+import { chooseFavoriteHaircut } from './http/controllers/users/choose-favorite-haircut'
 
 export const app = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -62,15 +66,25 @@ app.register(updateHaircut)
 
 app.register(createBarberShop)
 
-app.register(userRoutes)
+app.register(registerUser)
+app.register(authenticateUser)
+app.register(getUserProfile)
+app.register(refreshUserToken)
+app.register(chooseFavoriteHaircut)
+
 app.register(barberCustomersRoutes)
 app.register(checkInsRoutes)
 
 app.setErrorHandler((error, _, reply) => {
-  if (error instanceof ZodError) {
+  if (error instanceof z.ZodError) {
     return reply
       .status(400)
       .send({ message: error.issues[0]?.message ?? 'Invalid input data.' })
+  }
+
+  if (error.code === 'FST_ERR_VALIDATION') {
+    const message = error.validation?.[0]?.message ?? 'Invalid request payload.'
+    return reply.status(400).send({ message })
   }
 
   if (env.NODE_ENV !== 'production') {

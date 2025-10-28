@@ -9,7 +9,6 @@ export const registerBodySchema = z.object({
   birth_date: z.preprocess(
     (val) => {
       if (typeof val === 'string') {
-        // Checa formato YYYY-MM-DD
         const match = /^\d{4}-\d{2}-\d{2}$/.test(val)
         if (!match) return val
         const [y, m, d] = val.split('-')

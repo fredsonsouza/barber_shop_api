@@ -7,14 +7,8 @@ import { join } from 'node:path'
 import { TMP_FOLDER } from '@/config/upload'
 
 /**
- * Hook preHandler do Fastify para processar requisições multipart/form-data.
- *
- * Ele salva o PRIMEIRO arquivo encontrado na pasta /tmp e
- * anexa os campos de texto ao `request.body` para validação.
- *
- * Também garante a limpeza do arquivo temporário no 'finally' usando
- * o hook 'onResponse' do Fastify, que é mais seguro.
- */
+ * Fastify's preHandler hook for processing multipart/form-data requests.
+ **/
 export async function parseMultipart(
   request: FastifyRequest,
   reply: FastifyReply,
@@ -28,13 +22,13 @@ export async function parseMultipart(
   let tempMimeType: string | null = null
   const formData = new Map<string, string>()
 
-  // Garante a limpeza caso algo dê errado DURANTE o processamento
+  // Ensures cleanliness if something goes wrong DURING processing
   const cleanup = async () => {
     if (tempFileFullPath) {
       try {
         await unlink(tempFileFullPath)
       } catch (unlinkError) {
-        // Ignora (pode já ter sido movido ou deletado)
+        // Ignore (may have already been moved or deleted)
       }
     }
   }

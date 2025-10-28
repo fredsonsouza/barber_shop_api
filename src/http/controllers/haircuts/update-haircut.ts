@@ -1,4 +1,4 @@
-import { parseMultipart } from '@/http/hooks/parse-multipart'
+import { parseMultipart } from '@/http/middlewares/parse-multipart'
 import { verifyJWT } from '@/http/middlewares/verify-jwt'
 import { verifyUserRole } from '@/http/middlewares/verify-user-role'
 import { InvalidFileTypeError } from '@/use-cases/error/invalid-file-type-error'
@@ -32,7 +32,7 @@ export async function updateHaircut(app: FastifyInstance) {
       },
 
       schema: {
-        tags: ['Haircuts'],
+        tags: ['haircuts'],
         summary: 'Update a haircut',
         description: 'Update an existing haircut. Fields are optional.',
         security: [{ bearerAuth: [] }],

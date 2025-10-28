@@ -17,7 +17,7 @@ export async function deleteHaircut(app: FastifyInstance) {
       preHandler: [verifyJWT, verifyUserRole('ADMIN')],
 
       schema: {
-        tags: ['Haircuts'],
+        tags: ['haircuts'],
         summary: 'Delete a haircut',
         description: 'Delete an existing haircut by ID',
         security: [{ bearerAuth: [] }],

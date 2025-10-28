@@ -11,7 +11,7 @@ export async function createBarberShop(app: FastifyInstance) {
     {
       preHandler: [verifyJWT, verifyUserRole('ADMIN')],
       schema: {
-        tags: ['Barber Shops'],
+        tags: ['barber shops'],
         summary: 'Create a barber shop',
         description: 'Create a new Barber Shop',
         security: [{ bearerAuth: [] }],

@@ -6,6 +6,11 @@ export default defineConfig({
  
   test:{
     dir:'src',
+    globals:true,
+    coverage:{
+      all:false
+    },
+
     projects:[
       {
         extends:true,
@@ -23,9 +28,6 @@ export default defineConfig({
         }
       }
     ],
-    globals:true,
-    coverage:{
-      all:false
-    }
+  
   }
 })

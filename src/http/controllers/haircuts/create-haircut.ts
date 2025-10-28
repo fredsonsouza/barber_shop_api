@@ -1,7 +1,7 @@
 import { HaircutAlreadyExistsError } from '@/use-cases/error/haircut-already-exists-error'
 import { InvalidFileTypeError } from '@/use-cases/error/invalid-file-type-error'
 import { MakeCreateHaircutUseCase } from '@/use-cases/factories/make-create-haircut-use-case'
-import { parseMultipart } from '@/http/hooks/parse-multipart'
+import { parseMultipart } from '@/http/middlewares/parse-multipart'
 import { verifyJWT } from '@/http/middlewares/verify-jwt'
 import { verifyUserRole } from '@/http/middlewares/verify-user-role'
 import { unlink } from 'node:fs/promises'
@@ -28,7 +28,7 @@ export async function createHaircut(app: FastifyInstance) {
         }
       },
       schema: {
-        tags: ['Haircuts'],
+        tags: ['haircuts'],
         summary: 'Create a new haircut',
         security: [{ bearerAuth: [] }],
         consumes: ['multipart/form-data'],

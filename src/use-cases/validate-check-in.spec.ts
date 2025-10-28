@@ -1,8 +1,7 @@
-import { InMemoryCheckInsRepository } from '@/repositories/in-memory/in-memory-check-ins-repository'
-import { describe } from 'node:test'
-import { afterEach, beforeEach, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, expect, it, vi, describe } from 'vitest'
 import { ValidateCheckInUsecase } from './validate-check-in'
 import { ResourceNotFoundError } from './error/resource-not-found-error'
+import { InMemoryCheckInsRepository } from '@/repositories/in-memory/in-memory-check-ins-repository'
 
 let checkInsRepository: InMemoryCheckInsRepository
 let sut: ValidateCheckInUsecase

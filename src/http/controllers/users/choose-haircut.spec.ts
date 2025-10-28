@@ -22,6 +22,7 @@ describe('Choose Haircut (e2e', () => {
         name: 'Haircut test',
         description: 'Description haircut test',
         price: 20,
+        image_url: 'image-01.jpg',
       },
     })
 
