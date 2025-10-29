@@ -1,9 +1,9 @@
 import { PrismaUsersRepository } from '@/repositories/prisma/prisma-users-repository'
-import { LinkCustomerToBarberUseCase } from '../link-customer-to-barber'
 import { PrismaBarberCustomersRepository } from '@/repositories/prisma/prisma-barber-customers-repository'
+import { ChooseBarberUseCase } from '../choose-barber'
 
-export function makeLinkCustomerToBarberUseCase() {
-  return new LinkCustomerToBarberUseCase(
+export function makeChooseBarberUseCase() {
+  return new ChooseBarberUseCase(
     new PrismaUsersRepository(),
     new PrismaBarberCustomersRepository(),
   )

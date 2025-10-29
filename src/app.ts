@@ -1,11 +1,10 @@
 import { env } from './env'
-import z, { ZodError } from 'zod'
+import z from 'zod'
 
 import fastify from 'fastify'
 import fastifyJwt from '@fastify/jwt'
 import fastifyCookie from '@fastify/cookie'
 
-import { barberCustomersRoutes } from './http/controllers/baber-customers/routes'
 import { checkInsRoutes } from './http/controllers/check-ins/routes'
 import {
   validatorCompiler,
@@ -25,6 +24,7 @@ import { authenticateUser } from './http/controllers/users/authenticate-user'
 import { getUserProfile } from './http/controllers/users/get-user-profile'
 import { refreshUserToken } from './http/controllers/users/refresh-user-token'
 import { toggleFavoriteHaircut } from './http/controllers/users/toggle-favorite-haircut'
+import { chooseBarber } from './http/controllers/baber-customers/choose-barber'
 
 export const app = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -72,7 +72,8 @@ app.register(getUserProfile)
 app.register(refreshUserToken)
 app.register(toggleFavoriteHaircut)
 
-app.register(barberCustomersRoutes)
+app.register(chooseBarber)
+
 app.register(checkInsRoutes)
 
 app.setErrorHandler((error, _, reply) => {

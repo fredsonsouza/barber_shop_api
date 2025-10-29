@@ -1,19 +1,19 @@
 import { BarberCustomersRepository } from '@/repositories/barber-customers-repository'
 import { UsersRepository } from '@/repositories/users-repository'
 import { InvalidUserRoleError } from './error/invalid-user-role-error'
-import { DuplicateLinkCustomerToBarberError } from './error/duplicate-link-customer-to-barber-error'
+import { DuplicateChooseBarberError } from './error/duplicate-choose-barber-error'
 
-export interface LinkCustomerToBarberUseCaseRequest {
+export interface ChooseBarberUseCaseRequest {
   userAsCustomerId: string
   userAsBarberId: string
 }
-export interface LinkCustomerToBarberUseCaseResponse {
-  link: {
+export interface ChooseBarberUseCaseResponse {
+  connection: {
     userAsCustomerId: string
     userAsBarberId: string
   }
 }
-export class LinkCustomerToBarberUseCase {
+export class ChooseBarberUseCase {
   constructor(
     private usersRepository: UsersRepository,
     private barberCustomersRepository: BarberCustomersRepository,
@@ -22,7 +22,7 @@ export class LinkCustomerToBarberUseCase {
   async execute({
     userAsCustomerId,
     userAsBarberId,
-  }: LinkCustomerToBarberUseCaseRequest): Promise<LinkCustomerToBarberUseCaseResponse> {
+  }: ChooseBarberUseCaseRequest): Promise<ChooseBarberUseCaseResponse> {
     const barber = await this.usersRepository.findById(userAsBarberId)
 
     if (barber?.role !== 'BARBER') {
@@ -35,18 +35,18 @@ export class LinkCustomerToBarberUseCase {
       )
 
     if (existingLink) {
-      throw new DuplicateLinkCustomerToBarberError()
+      throw new DuplicateChooseBarberError()
     }
 
-    const link = await this.barberCustomersRepository.create({
+    const connection = await this.barberCustomersRepository.create({
       userAsBarberId,
       userAsCustomerId,
     })
 
     return {
-      link: {
-        userAsBarberId: link.user_barber_id,
-        userAsCustomerId: link.user_customer_id,
+      connection: {
+        userAsBarberId: connection.user_barber_id,
+        userAsCustomerId: connection.user_customer_id,
       },
     }
   }
