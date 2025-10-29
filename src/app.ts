@@ -26,7 +26,8 @@ import { toggleFavoriteHaircut } from './http/controllers/users/toggle-favorite-
 import { chooseBarber } from './http/controllers/baber-customers/choose-barber'
 import { createCheckIn } from './http/controllers/check-ins/create'
 import { validateCheckIn } from './http/controllers/check-ins/validate'
-import { getCustomermetrics } from './http/controllers/check-ins/metrics'
+import { getCustomermetrics } from './http/controllers/check-ins/get-customer-metrics'
+import { getBarberMetrics } from './http/controllers/check-ins/get-barber-metrics'
 
 export const app = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -79,6 +80,7 @@ app.register(chooseBarber)
 app.register(createCheckIn)
 app.register(validateCheckIn)
 app.register(getCustomermetrics)
+app.register(getBarberMetrics)
 
 app.setErrorHandler((error, _, reply) => {
   if (error instanceof z.ZodError) {
