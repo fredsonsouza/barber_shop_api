@@ -24,7 +24,7 @@ import { registerUser } from './http/controllers/users/register-user'
 import { authenticateUser } from './http/controllers/users/authenticate-user'
 import { getUserProfile } from './http/controllers/users/get-user-profile'
 import { refreshUserToken } from './http/controllers/users/refresh-user-token'
-import { chooseFavoriteHaircut } from './http/controllers/users/choose-favorite-haircut'
+import { toggleFavoriteHaircut } from './http/controllers/users/toggle-favorite-haircut'
 
 export const app = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -70,7 +70,7 @@ app.register(registerUser)
 app.register(authenticateUser)
 app.register(getUserProfile)
 app.register(refreshUserToken)
-app.register(chooseFavoriteHaircut)
+app.register(toggleFavoriteHaircut)
 
 app.register(barberCustomersRoutes)
 app.register(checkInsRoutes)

@@ -1,18 +1,18 @@
 import { InMemoryHaircutsRepository } from '@/repositories/in-memory/in-memory-haircuts-repository'
 import { InMemoryUsersRepository } from '@/repositories/in-memory/in-memory-users-repository'
 import { beforeEach, describe, expect, it } from 'vitest'
-import { ChooseFavoriteHaircutUseCase } from './choose-favorite-haircut'
 import { ResourceNotFoundError } from './error/resource-not-found-error'
+import { ToggleFavoriteHaircutUseCase } from './toggle-favorite-haircut'
 
 let usersRepository: InMemoryUsersRepository
 let haircutsRepository: InMemoryHaircutsRepository
-let sut: ChooseFavoriteHaircutUseCase
+let sut: ToggleFavoriteHaircutUseCase
 
 describe('Choose Favorite Haircut Use Case', () => {
   beforeEach(() => {
     usersRepository = new InMemoryUsersRepository()
     haircutsRepository = new InMemoryHaircutsRepository()
-    sut = new ChooseFavoriteHaircutUseCase(usersRepository, haircutsRepository)
+    sut = new ToggleFavoriteHaircutUseCase(usersRepository, haircutsRepository)
   })
 
   it('Should be able to favorite a haircut', async () => {
@@ -28,6 +28,7 @@ describe('Choose Favorite Haircut Use Case', () => {
       name: 'Social Cut',
       description: 'An ellegant haircut',
       price: 30,
+      image_url: 'image-01.jpg',
     })
     const result = await sut.execute({
       userId: user.id,
@@ -50,18 +51,21 @@ describe('Choose Favorite Haircut Use Case', () => {
       name: 'Cut 1',
       description: 'Desc 1',
       price: 20,
+      image_url: 'image-01.jpg',
     })
 
     const haircut2 = await haircutsRepository.create({
       name: 'Cut 2',
       description: 'Desc 2',
       price: 25,
+      image_url: 'image-01.jpg',
     })
 
     const haircut3 = await haircutsRepository.create({
       name: 'Cut 3',
       description: 'Desc 3',
       price: 30,
+      image_url: 'image-01.jpg',
     })
 
     await sut.execute({
@@ -100,6 +104,7 @@ describe('Choose Favorite Haircut Use Case', () => {
       name: 'Social Cut',
       description: 'An ellegant haircut',
       price: 30,
+      image_url: 'image-01.jpg',
     })
 
     await sut.execute({
@@ -122,6 +127,7 @@ describe('Choose Favorite Haircut Use Case', () => {
       name: 'Social Cut',
       description: 'An ellegant haircut',
       price: 30,
+      image_url: 'image-01.jpg',
     })
 
     await expect(() =>

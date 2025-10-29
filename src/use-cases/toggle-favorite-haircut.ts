@@ -3,17 +3,17 @@ import { UsersRepository } from '@/repositories/users-repository'
 import { Haircut, User } from 'generated/prisma'
 import { ResourceNotFoundError } from './error/resource-not-found-error'
 
-export interface ChooseFavoriteHaircutUseCaseRequest {
+export interface ToggleFavoriteHaircutUseCaseRequest {
   userId: string
   haircutId: string
 }
-export interface ChooseFavoriteHaircutUseCaseResponse {
+export interface ToggleFavoriteHaircutUseCaseResponse {
   user: User
   haircut: Haircut
   favorited: boolean
 }
 
-export class ChooseFavoriteHaircutUseCase {
+export class ToggleFavoriteHaircutUseCase {
   constructor(
     private usersRepository: UsersRepository,
     private haircutsRepository: HaircutsRepository,
@@ -22,7 +22,7 @@ export class ChooseFavoriteHaircutUseCase {
   async execute({
     userId,
     haircutId,
-  }: ChooseFavoriteHaircutUseCaseRequest): Promise<ChooseFavoriteHaircutUseCaseResponse> {
+  }: ToggleFavoriteHaircutUseCaseRequest): Promise<ToggleFavoriteHaircutUseCaseResponse> {
     const user = await this.usersRepository.findById(userId)
 
     if (!user) {
