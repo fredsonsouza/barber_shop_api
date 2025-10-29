@@ -5,7 +5,6 @@ import fastify from 'fastify'
 import fastifyJwt from '@fastify/jwt'
 import fastifyCookie from '@fastify/cookie'
 
-import { checkInsRoutes } from './http/controllers/check-ins/routes'
 import {
   validatorCompiler,
   serializerCompiler,
@@ -25,6 +24,9 @@ import { getUserProfile } from './http/controllers/users/get-user-profile'
 import { refreshUserToken } from './http/controllers/users/refresh-user-token'
 import { toggleFavoriteHaircut } from './http/controllers/users/toggle-favorite-haircut'
 import { chooseBarber } from './http/controllers/baber-customers/choose-barber'
+import { createCheckIn } from './http/controllers/check-ins/create'
+import { validateCheckIn } from './http/controllers/check-ins/validate'
+import { getCustomermetrics } from './http/controllers/check-ins/metrics'
 
 export const app = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -74,7 +76,9 @@ app.register(toggleFavoriteHaircut)
 
 app.register(chooseBarber)
 
-app.register(checkInsRoutes)
+app.register(createCheckIn)
+app.register(validateCheckIn)
+app.register(getCustomermetrics)
 
 app.setErrorHandler((error, _, reply) => {
   if (error instanceof z.ZodError) {

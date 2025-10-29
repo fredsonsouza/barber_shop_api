@@ -5,11 +5,13 @@ import { InvalidUserRoleError } from '@/use-cases/error/invalid-user-role-error'
 import { ZodTypeProvider } from 'fastify-type-provider-zod'
 import z from 'zod'
 import { DuplicateChooseBarberError } from '@/use-cases/error/duplicate-choose-barber-error'
+import { verifyJWT } from '@/http/middlewares/verify-jwt'
 
 export async function chooseBarber(app: FastifyInstance) {
   app.withTypeProvider<ZodTypeProvider>().post(
     '/barber-customers/choose',
     {
+      preHandler: [verifyJWT],
       schema: {
         tags: ['Barber Customers'],
         summary: 'Create Client-Barber Association',
